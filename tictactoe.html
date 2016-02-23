@@ -9,6 +9,8 @@
 
 <body><script type="text/javascript">
 
+var xTurn = true
+
 function Square(){
 	square = document.createElement("BUTTON");
 	square.setAttribute("type", "button");
@@ -21,9 +23,16 @@ function Square(){
 }
 
 function buttonClickHandler(event){
-	playerToken = document.createTextNode("X")
+	if (xTurn){
+		playerToken = document.createTextNode("X")		
+	}
+	else {
+		playerToken = document.createTextNode("O")	
+	}
+	
 	event.target.appendChild(playerToken)
 	event.target.setAttribute("disabled", "true")
+	xTurn = !xTurn
 
 }
 
