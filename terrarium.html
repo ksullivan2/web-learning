@@ -18,9 +18,7 @@ Dictionary.prototype.contains = function(name){
 };
 
 Dictionary.prototype.each = function(action){
-	for (var property in this){
-		action(property, this[property]);
-	}
+	forEachIn(this.values, action)
 }
 
 
@@ -32,6 +30,22 @@ function Point(x,y){
 Point.prototype.add = function(other){
 	return new Point(this.x + other.x, this.y + other.y)
 }
+
+//functions she just wants us to write
+function forEachIn(object, action){
+	for (var property in object) {
+		if (object.hasOwnProperty(property))
+			action(property, object[property]);
+	}
+}
+
+
+function bind(func, object){
+	return function(){
+		return func.apply(object,arguments);
+	};
+}
+
 
 //defines Grid object type
 //obj is the array that you're turning into a grid
@@ -121,7 +135,6 @@ function Terrarium(plan){
 			this.grid.setValueAt(new Point(col, row), elementFromCharacter(plan[row][col]));
 		}
 	}
-	
 }
 
 Terrarium.prototype.toString = function(){
@@ -133,6 +146,51 @@ Terrarium.prototype.toString = function(){
 			characters.push("\n");
 	});
 	return characters.join(" ");
+};
+
+Terrarium.prototype.listActingCreatures = function() {
+	var found = [];
+	this.grid.each(function(point,value){
+		if (value != undefined && value.act)
+			found.push({object:value, point: point});
+	});
+	return found;
+};
+
+Terrarium.prototype.listSurroundings = function(center) {
+	document.write("list surroundings of ",center.x, ",", center.y)
+	var result = {};
+	var grid = this.grid;
+	directions.each(function(name, direction) {
+		var place = center.add(direction);
+		if (grid.isInside(place))
+			result[name] = characterFromElement(grid.valueAt(place));
+		else
+			result[name] = "#";
+	});
+	return result;
+};
+
+Terrarium.prototype.processCreature = function(creature, point) {
+	document.write("process creature @",point.x,",",point.y )
+	var action = creature.act(this.listSurroundings(point));
+
+	if (action.type == "move" && directions.contains(action.direction)){
+		var to = point.add(directions.lookup(action.direction));
+		if (this.grid.isInside(to) && this.grid.valueAt(to) == undefined)
+			this.grid.moveValue(point, to);
+	}
+	else {
+		throw new Error("Unsupported action: " + action.type);
+	}
+};
+
+Terrarium.prototype.step = function() {
+	document.write("step bug at ", this.listActingCreatures()[0]["point"].x, ",", this.listActingCreatures()[0]["point"].y);
+	creatures = this.listActingCreatures();
+	for (i = 0; i < creatures.length; i++){
+		this.processCreature(creatures[i]["object"], creatures[i]["point"]);
+	}
 };
 
 
@@ -156,7 +214,10 @@ function characterFromElement(element){
 
 
 test = new Terrarium(thePlan);
-console.log(test.toString())
+console.log(test.toString());
+test.step();
+console.log(test.toString()); 
+
 
 
 </script> </body> </html>
