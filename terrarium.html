@@ -21,6 +21,12 @@ Dictionary.prototype.each = function(action){
 	forEachIn(this.values, action)
 }
 
+Dictionary.prototype.names = function() {
+	var names = [];
+	this.each(function(name, value){names.push(name);});
+	return names;
+}
+
 
 function Point(x,y){
 	this.x = x,
@@ -29,6 +35,10 @@ function Point(x,y){
 
 Point.prototype.add = function(other){
 	return new Point(this.x + other.x, this.y + other.y)
+}
+
+Point.prototype.toString = function(){
+	return "(" + this.x + "," + this.y + ')';
 }
 
 //functions she just wants us to write
@@ -44,6 +54,16 @@ function bind(func, object){
 	return function(){
 		return func.apply(object,arguments);
 	};
+}
+
+function randomInteger(below){
+	return Math.floor(Math.random() * below);
+}
+
+function randomElement(array){
+	if (array.length == 0)
+		throw new Error("The array is empty.");
+	return array[Math.floor(Math.random() * array.length)];
 }
 
 
@@ -101,6 +121,13 @@ var directions = new Dictionary({
 	"nw": new Point(-1, -1)
 });
 
+
+var creatureTypes = new Dictionary();
+creatureTypes.register = function(constructor, character){
+	constructor.prototype.character = character;
+	this.store(character, constructor);
+};
+
 //init statement.... this class exists.
 function StupidBug() {};
 
@@ -109,7 +136,24 @@ StupidBug.prototype.act = function(surroundings){
 	return {type: "move", direction: "s"};
 };
 
+function BouncingBug(){
+	this.direction = "ne";
+}
 
+BouncingBug.prototype.act = function(surroundings){
+	if (surroundings[this.direction] != " ")
+		this.direction = (this.direction == "ne" ? "sw" : "ne");
+	return {type: "move", direction: this.direction};
+};
+
+function DrunkBug(){};
+DrunkBug.prototype.act = function(surroundings){
+	return {type: "move", direction: randomElement(directions.names())};
+}
+
+creatureTypes.register(StupidBug, "o");
+creatureTypes.register(BouncingBug, "%");
+creatureTypes.register(DrunkBug, "~");
 
 
 //TERRARIUM
@@ -117,14 +161,14 @@ var thePlan =
 ["############################",
  "#       #     #     o     ##",
  "#                          #",
- "#        #####             #",
+ "#     %  #####             #",
  "##       #   #      ##     #",
- "###         ##       #     #",
+ "###         ##   ~   #     #",
  "#         ###        #     #",
- "#   ####                   #",
+ "#   ####             %     #",
  "#   ##       o             #",
  "# o  #          #      ### #",
- "#    #                     #",
+ "#    #      ~              #",
  "############################"];
 
 function Terrarium(plan){
@@ -158,7 +202,6 @@ Terrarium.prototype.listActingCreatures = function() {
 };
 
 Terrarium.prototype.listSurroundings = function(center) {
-	document.write("list surroundings of ",center.x, ",", center.y)
 	var result = {};
 	var grid = this.grid;
 	directions.each(function(name, direction) {
@@ -172,7 +215,6 @@ Terrarium.prototype.listSurroundings = function(center) {
 };
 
 Terrarium.prototype.processCreature = function(creature, point) {
-	document.write("process creature @",point.x,",",point.y )
 	var action = creature.act(this.listSurroundings(point));
 
 	if (action.type == "move" && directions.contains(action.direction)){
@@ -186,7 +228,6 @@ Terrarium.prototype.processCreature = function(creature, point) {
 };
 
 Terrarium.prototype.step = function() {
-	document.write("step bug at ", this.listActingCreatures()[0]["point"].x, ",", this.listActingCreatures()[0]["point"].y);
 	creatures = this.listActingCreatures();
 	for (i = 0; i < creatures.length; i++){
 		this.processCreature(creatures[i]["object"], creatures[i]["point"]);
@@ -203,7 +244,10 @@ StupidBug.prototype.character = "o"
 function elementFromCharacter(character){
  	if (character == " ") return undefined;
  	else if (character == "#") return wall;
- 	else if (character == "o") return new StupidBug();
+ 	else if (creatureTypes.contains(character))
+ 		return new (creatureTypes.lookup(character))();
+ 	else
+ 		throw new Error("Unknown character: " + character);
 };
 
 function characterFromElement(element){
@@ -215,6 +259,10 @@ function characterFromElement(element){
 
 test = new Terrarium(thePlan);
 console.log(test.toString());
+test.step();
+console.log(test.toString()); 
+test.step();
+console.log(test.toString()); 
 test.step();
 console.log(test.toString()); 
 
