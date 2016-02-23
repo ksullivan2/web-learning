@@ -1,14 +1,31 @@
-<html><body><script type="text/javascript">
+<html>
+<style type = "text/css">
+	button{
+		 
+	}
+
+</style>
+
+
+<body><script type="text/javascript">
 
 function Square(){
 	square = document.createElement("BUTTON");
 	square.setAttribute("type", "button");
+	square.addEventListener("click", buttonClickHandler, false);
+
+	//these don't work in the CSS... look into that
 	square.style.height = "50px";
 	square.style.width = "50px";
-	
 	return square
 }
 
+function buttonClickHandler(event){
+	playerToken = document.createTextNode("X")
+	event.target.appendChild(playerToken)
+	event.target.setAttribute("disabled", "true")
+
+}
 
 function Grid(){
 	grid = []
@@ -25,14 +42,12 @@ function Grid(){
 			tempSquare = new Square()
 			var id = row + "," + col
 		 	tempSquare.setAttribute("id", id)
-			var textInSquare = document.createTextNode(id);
-			tempSquare.appendChild(textInSquare);
+			
 			
 			//add squares to grid and div
 			grid[row][col] = tempSquare
 			tempDiv.appendChild(tempSquare);
 		}
-
 	}
 	return grid
 }
