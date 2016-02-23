@@ -1,0 +1,50 @@
+<html><body><script type="text/javascript">
+
+function Square(){
+	square = document.createElement("BUTTON");
+	square.setAttribute("type", "button");
+	square.style.height = "50px";
+	square.style.width = "50px";
+	
+	return square
+}
+
+
+function Grid(){
+	grid = []
+
+	//simutaneously create data structure and html elements
+	for (row = 0; row < 3; row ++){
+		
+		grid[row] = [];
+		var tempDiv = document.createElement("DIV");
+		document.body.appendChild(tempDiv)
+		
+		for (col = 0; col < 3; col ++){
+			//create and set attributes of a square
+			tempSquare = new Square()
+			var id = row + "," + col
+		 	tempSquare.setAttribute("id", id)
+			var textInSquare = document.createTextNode(id);
+			tempSquare.appendChild(textInSquare);
+			
+			//add squares to grid and div
+			grid[row][col] = tempSquare
+			tempDiv.appendChild(tempSquare);
+		}
+
+	}
+	return grid
+}
+
+
+grid = new Grid()
+
+
+
+</script>
+
+
+
+
+</script> </body> </html>
