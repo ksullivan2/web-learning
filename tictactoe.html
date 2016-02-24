@@ -20,27 +20,35 @@ function Game(){
 
 Game.prototype.checkForWin = function(){
 	if (this.board.checkRows() || this.board.checkCols() || this.board.checkDiagonals()){
-		this.board.disableAllSquares();
+		this.disableAllSquares();
+		//want to change this to create a win event or something, don't like that the model bypasses the controller
 	}
 }
 
 function BoardModel(game){
+	//save reference to game object
 	this.game = game;
 
+	//create grid
 	this.grid = [];
-	//simutaneously create data structure and html elements
 	for (var row = 0; row < 3; row ++){
 		this.grid[row] = [];
 		for (var col = 0; col < 3; col ++){
 			
-			//add squares to grid and div, with references to html elements
+			//add squares to grid, with references to html elements
 			var id = row + "," + col;
 			this.grid[row][col] = {value: "_", "square": document.getElementById(id)};
 			
 		}
 	}
-
 }
+
+BoardModel.prototype.resetBoardModel = function(){
+	//clears board model, does not affect view
+	eachSquare(this.grid, function(gridLocation){
+		gridLocation.value = "_";})
+}
+
 
 //controller
 Game.prototype.buttonClickHandler = function(event){
@@ -62,26 +70,23 @@ Game.prototype.buttonClickHandler = function(event){
 	var col = event.target.id[2];
 	this.game.board.grid[row][col].value = playerToken;
 
-	//swap whose turn it is
-	this.game.xTurn = !this.game.xTurn;
-
-	//finish this check later
+	//check if the game has been won
 	this.game.checkForWin();
 
-	
+	//swap whose turn it is
+	this.game.xTurn = !this.game.xTurn;
 }
 
 Game.prototype.newGameClickHandler = function(event){
-	this.game.board.resetAllSquares();
+	//update both model and controller
+	this.game.resetView();
+	this.game.board.resetBoardModel();
 
 }
 
-BoardModel.prototype.resetAllSquares = function(){
-	//disable click input on unused squares, keeps Xs and Os
-	eachSquare(this.grid, function(gridLocation){
-		//update model
-		gridLocation.value = "_";
-
+Game.prototype.resetView = function(){
+	//re-enable buttons and clear Xs and Os
+	eachSquare(this.board.grid, function(gridLocation){
 		//update view
 		gridLocation.square.disabled = false;
 		if (gridLocation.square.firstChild){
@@ -90,12 +95,14 @@ BoardModel.prototype.resetAllSquares = function(){
 	})
 }
 
-BoardModel.prototype.disableAllSquares = function(){
+Game.prototype.disableAllSquares = function(){
 	//disable click input on unused squares, keeps Xs and Os
-	eachSquare(this.grid, function(gridLocation){
+	eachSquare(this.board.grid, function(gridLocation){
 		gridLocation.square.disabled = true;})
 
 }
+
+
 
 
 //view
@@ -132,10 +139,6 @@ function drawBoard(game){
 }
 
 
-
-
-
-
 function drawNewGameButton(game){
 	//create new div
 	var newDiv = document.createElement("DIV");
@@ -162,7 +165,6 @@ function drawNewGameButton(game){
 
 			
 //helper functions for model
-
 function eachSquare(grid, action){
 	for (var row = 0; row < 3; row ++){
 		for (var col = 0; col < 3; col ++){
@@ -231,11 +233,15 @@ BoardModel.prototype.checkDiagonals = function(){
 }
 
 function runner(){
+	//create game object
 	var game = new Game();
+	
 	//create view
-	game.board = new BoardModel(game);
 	drawBoard(game);
 	drawNewGameButton(game);
+
+	//the game board contains a reference to the objects on screen, so must be called after the view is created
+	game.board = new BoardModel(game);
 }
 
 runner()
