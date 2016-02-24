@@ -15,6 +15,8 @@
 function Game(){
 	//create view
 	drawBoard(this);
+	drawNewGameButton(this);
+
 
 	//set game properties
 	this.xTurn = true;
@@ -24,7 +26,7 @@ function Game(){
 
 Game.prototype.checkForWin = function(){
 	if (this.board.checkRows() || this.board.checkCols() || this.board.checkDiagonals()){
-		console.log(this.winner)
+		this.board.disableAllSquares();
 	}
 }
 
@@ -49,7 +51,7 @@ function BoardModel(game){
 //controller
 Game.prototype.buttonClickHandler = function(event){
 	//check whose turn it was
-	/*if (this.game.xTurn){
+	if (this.game.xTurn){
 		var playerToken = "X"	
 	}
 	else {
@@ -70,9 +72,35 @@ Game.prototype.buttonClickHandler = function(event){
 	this.game.xTurn = !this.game.xTurn
 
 	//finish this check later
-	this.game.checkForWin();*/
+	this.game.checkForWin();
 
-	this.game.board.disableAllSquares();
+	
+}
+
+Game.prototype.newGameClickHandler = function(event){
+	this.game.board.resetAllSquares();
+
+}
+
+BoardModel.prototype.resetAllSquares = function(){
+	//disable click input on unused squares, keeps Xs and Os
+	eachSquare(this.grid, function(gridLocation){
+		//update model
+		gridLocation.value = "_"
+
+		//update view
+		gridLocation.square.disabled = false;
+		if (gridLocation.square.firstChild){
+			gridLocation.square.removeChild(gridLocation.square.firstChild);
+		}
+	})
+}
+
+BoardModel.prototype.disableAllSquares = function(){
+	//disable click input on unused squares, keeps Xs and Os
+	eachSquare(this.grid, function(gridLocation){
+		gridLocation.square.disabled = true})
+
 }
 
 
@@ -111,15 +139,30 @@ function drawBoard(game){
 
 
 
-BoardModel.prototype.disableAllSquares = function(){
-	//disable click input on unused squares, keeps Xs and Os
-	eachSquare(this.grid, function(square){
-		square.disabled = true})
 
-}
 
-function resetAllSquares(grid){
+
+function drawNewGameButton(game){
+	//create new div
+	var newDiv = document.createElement("DIV");
 	
+	
+	//create button
+	var newGameButton = document.createElement("BUTTON");
+	newGameButton.className = "newGame";
+	newGameButton.id = "newGameButton";
+	newGameButton.addEventListener("click", game.newGameClickHandler, false);
+	newGameButton.game = game
+
+	//create text node
+	var newGameText = document.createTextNode("New Game");
+	newGameText.id = "newGameText"
+
+	
+	//put 'em all on screen
+	document.body.appendChild(newDiv);
+	newDiv.appendChild(newGameButton);
+	newGameButton.appendChild(newGameText)
 }
 
 
@@ -129,7 +172,7 @@ function resetAllSquares(grid){
 function eachSquare(grid, action){
 	for (row = 0; row < 3; row ++){
 		for (col = 0; col < 3; col ++){
-			action(grid[row][col].square);
+			action(grid[row][col]);
 		}
 	}
 }
@@ -200,7 +243,6 @@ game = new Game()
 
 
 
-</script>
 
 
 
