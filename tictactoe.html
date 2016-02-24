@@ -12,30 +12,13 @@
 "use strict";
 
 //model
-function Game(){
+function BoardModel(controller){
+	//save reference to controller object
+	this.controller = controller;
+
 	//set game properties
 	this.xTurn = true;
 	this.winner = "test";
-}
-
-Game.prototype.checkForWin = function(){
-	if (this.board.checkRows() || this.board.checkCols() || this.board.checkDiagonals()){
-		this.disableAllSquares();
-		//want to change this to create a win event or something, don't like that the model bypasses the controller
-	}
-}
-
-Game.prototype.updateModelSquare = function(pressedSquare, playerToken){
-	//update model
-	var row = pressedSquare.id[0];
-	var col = pressedSquare.id[2];
-	this.board.grid[row][col].value = playerToken;
-}
-
-
-function BoardModel(game){
-	//save reference to game object
-	this.game = game;
 
 	//create grid
 	this.grid = [];
@@ -61,9 +44,26 @@ BoardModel.prototype.resetBoardModel = function(){
 
 
 //controller
-Game.prototype.buttonClickHandler = function(event){
+function Controller(){}	
+
+
+Controller.prototype.checkForWin = function(){
+	if (this.board.checkRows() || this.board.checkCols() || this.board.checkDiagonals()){
+		this.disableAllSquares();
+		//want to change this to create a win event or something, don't like that the model bypasses the controller
+	}
+}
+
+Controller.prototype.updateModelSquare = function(pressedSquare, playerToken){
+	//update model
+	var row = pressedSquare.id[0];
+	var col = pressedSquare.id[2];
+	this.board.grid[row][col].value = playerToken;
+}
+
+Controller.prototype.buttonClickHandler = function(event){
 	//check whose turn it was
-	if (this.game.xTurn){
+	if (this.controller.board.xTurn){
 		var playerToken = "X";	
 	}
 	else {
@@ -72,24 +72,24 @@ Game.prototype.buttonClickHandler = function(event){
 	
 	//update both model and view
 	updateViewSquare(event.target, playerToken);
-	event.target.game.updateModelSquare(event.target, playerToken);
+	event.target.controller.updateModelSquare(event.target, playerToken);
 	
 
-	//check if the game has been won
-	this.game.checkForWin();
+	//check if the controller has been won
+	this.controller.checkForWin();
 
 	//swap whose turn it is
-	this.game.xTurn = !this.game.xTurn;
+	this.controller.board.xTurn = !this.controller.board.xTurn;
 }
 
-Game.prototype.newGameClickHandler = function(event){
+Controller.prototype.newControllerClickHandler = function(event){
 	//update both model and controller
-	this.game.resetView();
-	this.game.board.resetBoardModel();
+	this.controller.resetView();
+	this.controller.board.resetBoardModel();
 
 }
 
-Game.prototype.resetView = function(){
+Controller.prototype.resetView = function(){
 	//re-enable buttons and clear Xs and Os
 	eachSquare(this.board.grid, function(gridLocation){
 		//update view
@@ -100,7 +100,7 @@ Game.prototype.resetView = function(){
 	})
 }
 
-Game.prototype.disableAllSquares = function(){
+Controller.prototype.disableAllSquares = function(){
 	//disable click input on unused squares, keeps Xs and Os
 	eachSquare(this.board.grid, function(gridLocation){
 		gridLocation.square.disabled = true;})
@@ -111,13 +111,13 @@ Game.prototype.disableAllSquares = function(){
 
 
 //view
-function Square(game){
+function Square(controller){
 	var square = document.createElement("BUTTON");
 	square.setAttribute("class","square");
-	square.addEventListener("click", game.buttonClickHandler, false);
+	square.addEventListener("click", controller.buttonClickHandler, false);
 
-	//store reference to game object so it can pass events 
-	square.game = game;
+	//store reference to controller object so it can pass events 
+	square.controller = controller;
 
 	//these don't work as expected in the CSS... look into that
 	square.style.height = "50px";
@@ -127,7 +127,7 @@ function Square(game){
 }
 
 
-function drawBoard(game){
+function drawBoard(controller){
 	for (var row = 0; row < 3; row ++){
 		//create a Div for that row
 		var tempDiv = document.createElement("DIV");
@@ -135,7 +135,7 @@ function drawBoard(game){
 
 		for (var col = 0; col < 3; col ++){
 			//create and label squares
-			var tempSquare = new Square(game);
+			var tempSquare = new Square(controller);
 			var id = row + "," + col;
 		 	tempSquare.id = id;
 		 	tempDiv.appendChild(tempSquare);
@@ -144,17 +144,17 @@ function drawBoard(game){
 }
 
 
-function drawNewGameButton(game){
+function drawNewControllerButton(controller){
 	//create new div
 	var newDiv = document.createElement("DIV");
 	
 	
 	//create button
 	var newGameButton = document.createElement("BUTTON");
-	newGameButton.className = "newGame";
+	newGameButton.className = "newController";
 	newGameButton.id = "newGameButton";
-	newGameButton.addEventListener("click", game.newGameClickHandler, false);
-	newGameButton.game = game;
+	newGameButton.addEventListener("click", controller.newControllerClickHandler, false);
+	newGameButton.controller = controller;
 
 	//create text node
 	var newGameText = document.createTextNode("New Game");
@@ -205,7 +205,7 @@ BoardModel.prototype.checkRows = function(){
 			testArray.push(this.grid[row][col].value);
 			}
 		if (allInArrayEqual(testArray)){
-			this.game.winner = testArray[0];
+			this.winner = testArray[0];
 			return true;
 		}
 	}
@@ -222,7 +222,7 @@ BoardModel.prototype.checkCols = function(){
 			testArray.push(this.grid[row][col].value);
 			}
 		if (allInArrayEqual(testArray)){
-			this.game.winner = testArray[0];
+			this.winner = testArray[0];
 			return true;
 		}
 	}
@@ -233,26 +233,26 @@ BoardModel.prototype.checkDiagonals = function(){
 	var leftDiagonal = [this.grid[0][0].value,this.grid[1][1].value,this.grid[2][2].value];
 	var rightDiagonal = [this.grid[0][2].value,this.grid[1][1].value,this.grid[2][0].value];
 	if (allInArrayEqual(leftDiagonal)){
-		this.game.winner = leftDiagonal[0];
+		this.winner = leftDiagonal[0];
 		return true;
 	}
 	else if (allInArrayEqual(rightDiagonal)){
-		this.game.winner = rightDiagonal[0];
+		this.winner = rightDiagonal[0];
 		return true;
 	};
 	return false;
 }
 
 function runner(){
-	//create game object
-	var game = new Game();
+	//create controller object
+	var controller = new Controller();
 	
 	//create view
-	drawBoard(game);
-	drawNewGameButton(game);
+	drawBoard(controller);
+	drawNewControllerButton(controller);
 
-	//the game board contains a reference to the objects on screen, so must be called after the view is created
-	game.board = new BoardModel(game);
+	//the controller board contains a reference to the objects on screen, so must be called after the view is created
+	controller.board = new BoardModel(controller);
 }
 
 runner()
