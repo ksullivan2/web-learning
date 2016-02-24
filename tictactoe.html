@@ -1,6 +1,6 @@
 <html>
 <style type = "text/css">
-	button{
+	button.square{
 		font-size: 20px; 
 		vertical-align: text-top;
 	}
@@ -13,18 +13,24 @@
 
 //model
 function Game(){
+	//create view
+	drawBoard(this);
+
+	//set game properties
 	this.xTurn = true;
 	this.board = new BoardModel(this);
-	this.winner = null
+	this.winner = "test"
 }
 
 Game.prototype.checkForWin = function(){
-	if (this.board.checkRows() || this.board.checkCols()){
-		console.log("WIN")
+	if (this.board.checkRows() || this.board.checkCols() || this.board.checkDiagonals()){
+		console.log(this.winner)
 	}
 }
 
-function BoardModel(){
+function BoardModel(game){
+	this.game = game
+
 	this.grid = []
 	//simutaneously create data structure and html elements
 	for (row = 0; row < 3; row ++){
@@ -43,7 +49,7 @@ function BoardModel(){
 //controller
 Game.prototype.buttonClickHandler = function(event){
 	//check whose turn it was
-	if (this.game.xTurn){
+	/*if (this.game.xTurn){
 		var playerToken = "X"	
 	}
 	else {
@@ -56,22 +62,24 @@ Game.prototype.buttonClickHandler = function(event){
 	event.target.disabled = "true";
 
 	//update controller
-	console.log(event.target.id)
+	var row = event.target.id[0]
+	var col = event.target.id[2]
+	this.game.board.grid[row][col].value = playerToken
 
 	//swap whose turn it is
 	this.game.xTurn = !this.game.xTurn
 
 	//finish this check later
-	//this.game.checkForWin();
-}
+	this.game.checkForWin();*/
 
+	this.game.board.disableAllSquares();
+}
 
 
 //view
 function Square(game){
-	
-
 	var square = document.createElement("BUTTON");
+	square.setAttribute("class","square")
 	square.addEventListener("click", game.buttonClickHandler, false);
 
 	//store reference to game object so it can pass events 
@@ -103,8 +111,28 @@ function drawBoard(game){
 
 
 
+BoardModel.prototype.disableAllSquares = function(){
+	//disable click input on unused squares, keeps Xs and Os
+	eachSquare(this.grid, function(square){
+		square.disabled = true})
+
+}
+
+function resetAllSquares(grid){
+	
+}
+
+
 			
 //helper functions for model
+
+function eachSquare(grid, action){
+	for (row = 0; row < 3; row ++){
+		for (col = 0; col < 3; col ++){
+			action(grid[row][col].square);
+		}
+	}
+}
 
 function allInArrayEqual(array){
 	if (array.length < 3){
@@ -112,59 +140,62 @@ function allInArrayEqual(array){
 	}
 
 	for (i = 0; i < array.length; i ++){
-		if (!array[i] || array[i] != array[0]){
+		if (array[i] == "_" || array[i] != array[0]){
 			return false;
 		}
 	}
 	return true;
 }
 
-/*Board.prototype.checkRows = function(){
-	rows:
+BoardModel.prototype.checkRows = function(){
 	for (row = 0; row < 3; row ++){
 		var testArray = []
-		cols:
-		for (col = 0; col < 3; row ++){
-			if (this.grid[row][col].firstChild != null){
-				console.log(this.grid[row][col].firstChild.nodeValue)
-				testArray.push(this.grid[row][col].firstChild.nodeValue)
+
+		for (col = 0; col < 3; col ++){
+			testArray.push(this.grid[row][col].value);
 			}
-			else {
-				break cols;
-			}
-		}
-		console.log(testArray)
 		if (allInArrayEqual(testArray)){
 			this.game.winner = testArray[0]
-			return true
+			return true;
 		}
 	}
 	return false;
 }		
 
 
-Board.prototype.checkCols = function(){
-	cols:
-	for (col = 0; col < 3; col ++){
-		rows:
-		for (row = 0; row < 3; row ++){
-			if (!this.grid[row][col].firstChild){
-				break rows;
+BoardModel.prototype.checkCols = function(){
 
-			if (this.grid[row][col].firstChild.content != this.grid[0][col].firstChild.content) {
-				break rows;
-				}
+	for (col = 0; col < 3; col ++){
+		var testArray = []
+
+		for (row = 0; row < 3; row ++){
+			testArray.push(this.grid[row][col].value);
 			}
-		return true;
+		if (allInArrayEqual(testArray)){
+			this.game.winner = testArray[0]
+			return true;
 		}
 	}
 	return false;
 }
-*/
+
+BoardModel.prototype.checkDiagonals = function(){
+	var leftDiagonal = [this.grid[0][0].value,this.grid[1][1].value,this.grid[2][2].value]
+	var rightDiagonal = [this.grid[0][2].value,this.grid[1][1].value,this.grid[2][0].value]
+	if (allInArrayEqual(leftDiagonal)){
+		this.game.winner = leftDiagonal[0];
+		return true
+	}
+	else if (allInArrayEqual(rightDiagonal)){
+		this.game.winner = rightDiagonal[0]
+		return true
+	};
+	return false;
+}
 
 //runner function
 game = new Game()
-drawBoard(game)
+
 
 
 
