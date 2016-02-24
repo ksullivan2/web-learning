@@ -12,9 +12,8 @@
 "use strict";
 
 //model
-function BoardModel(controller){
-	//save reference to controller object
-	this.controller = controller;
+function BoardModel(){
+	
 
 	//set game properties
 	this.xTurn = true;
@@ -26,9 +25,8 @@ function BoardModel(controller){
 		this.grid[row] = [];
 		for (var col = 0; col < 3; col ++){
 			
-			//add squares to grid, with references to html elements
-			var id = row + "," + col;
-			this.grid[row][col] = {value: "_", "square": document.getElementById(id)};
+			//add blank data to grid
+			this.grid[row][col] = "_"
 			
 		}
 	}
@@ -38,7 +36,7 @@ BoardModel.prototype.resetBoardModel = function(){
 	//clears board model, does not affect view
 	this.grid.forEach(function(row){
 		row.forEach(function(box){
-		box.value = "_";
+		box = "_";
 		})
 	})
 }
@@ -61,7 +59,7 @@ Controller.prototype.updateModelSquare = function(pressedSquare, playerToken){
 	//update model
 	var row = pressedSquare.id[0];
 	var col = pressedSquare.id[2];
-	this.board.grid[row][col].value = playerToken;
+	this.board.grid[row][col] = playerToken;
 }
 
 Controller.prototype.buttonClickHandler = function(event){
@@ -94,22 +92,23 @@ Controller.prototype.newGameClickHandler = function(event){
 
 Controller.prototype.resetView = function(){
 	//re-enable buttons and clear Xs and Os
-	this.board.grid.forEach(function (row) {
-		row.forEach(function (box){
-		//update view
-		box.square.disabled = false;
-		box.square.firstChild.nodeValue = "";
-		})
-	})
+	var squares = document.getElementsByClassName("square");
+	//returns a node list, must be iterated through, can't use forEach =(
+
+	for (var i = 0; i < squares.length; i++){
+		squares[i].disabled = false;
+		squares[i].firstChild.nodeValue = "";
+	}
 }
 
 Controller.prototype.disableAllSquares = function(){
 	//disable click input on unused squares, keeps Xs and Os
-	this.board.grid.forEach(function (row) {
-		row.forEach(function (box){
-			box.square.disabled = true;
-		})
-	})
+	var squares = document.getElementsByClassName("square");
+	//returns a node list, must be iterated through, can't use forEach =(
+
+	for (var i = 0; i < squares.length; i++){
+		squares[i].disabled = true;
+	}
 }
 
 
@@ -198,7 +197,7 @@ BoardModel.prototype.checkRows = function(){
 		var testArray = [];
 
 		for (var col = 0; col < 3; col ++){
-			testArray.push(this.grid[row][col].value);
+			testArray.push(this.grid[row][col]);
 			}
 		if (allInArrayEqual(testArray)){
 			this.winner = testArray[0];
@@ -215,7 +214,7 @@ BoardModel.prototype.checkCols = function(){
 		var testArray = [];
 
 		for (var row = 0; row < 3; row ++){
-			testArray.push(this.grid[row][col].value);
+			testArray.push(this.grid[row][col]);
 			}
 		if (allInArrayEqual(testArray)){
 			this.winner = testArray[0];
@@ -226,8 +225,8 @@ BoardModel.prototype.checkCols = function(){
 }
 
 BoardModel.prototype.checkDiagonals = function(){
-	var leftDiagonal = [this.grid[0][0].value,this.grid[1][1].value,this.grid[2][2].value];
-	var rightDiagonal = [this.grid[0][2].value,this.grid[1][1].value,this.grid[2][0].value];
+	var leftDiagonal = [this.grid[0][0],this.grid[1][1],this.grid[2][2]];
+	var rightDiagonal = [this.grid[0][2],this.grid[1][1],this.grid[2][0]];
 	if (allInArrayEqual(leftDiagonal)){
 		this.winner = leftDiagonal[0];
 		return true;
@@ -248,7 +247,7 @@ function runner(){
 	drawNewGameButton(controller.newGameClickHandler.bind(controller));
 
 	//the controller board contains a reference to the objects on screen, so must be called after the view is created
-	controller.board = new BoardModel(controller);
+	controller.board = new BoardModel();
 }
 
 runner()
