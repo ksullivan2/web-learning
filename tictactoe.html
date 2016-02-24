@@ -42,16 +42,16 @@ BoardModel.prototype.resetBoardModel = function(){
 
 
 BoardModel.prototype.checkRows = function(){
-	this.grid.forEach(row){
+	this.grid.forEach(function(row){
 		var testArray = [];
-		row.forEach(square){
+		row.forEach(function(square){
 			testArray.push(square);
-		}
+		})
 		if (allInArrayEqual(testArray)){
 			this.winner = testArray[0];
 			return true;
 		}
-	}
+	})
 	return false;
 }		
 
