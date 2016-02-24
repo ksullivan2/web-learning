@@ -9,7 +9,7 @@
 
 
 <body><script type="text/javascript">
-//"use strict";
+"use strict";
 
 //model
 function Game(){
@@ -35,9 +35,9 @@ function BoardModel(game){
 
 	this.grid = [];
 	//simutaneously create data structure and html elements
-	for (row = 0; row < 3; row ++){
+	for (var row = 0; row < 3; row ++){
 		this.grid[row] = [];
-		for (col = 0; col < 3; col ++){
+		for (var col = 0; col < 3; col ++){
 			
 			//add squares to grid and div, with references to html elements
 			var id = row + "," + col;
@@ -122,14 +122,14 @@ function Square(game){
 
 
 function drawBoard(game){
-	for (row = 0; row < 3; row ++){
+	for (var row = 0; row < 3; row ++){
 		//create a Div for that row
 		var tempDiv = document.createElement("DIV");
 		document.body.appendChild(tempDiv);
 
-		for (col = 0; col < 3; col ++){
+		for (var col = 0; col < 3; col ++){
 			//create and label squares
-			tempSquare = new Square(game);
+			var tempSquare = new Square(game);
 			var id = row + "," + col;
 		 	tempSquare.id = id;
 		 	tempDiv.appendChild(tempSquare);
@@ -170,8 +170,8 @@ function drawNewGameButton(game){
 //helper functions for model
 
 function eachSquare(grid, action){
-	for (row = 0; row < 3; row ++){
-		for (col = 0; col < 3; col ++){
+	for (var row = 0; row < 3; row ++){
+		for (var col = 0; col < 3; col ++){
 			action(grid[row][col]);
 		}
 	}
@@ -182,7 +182,7 @@ function allInArrayEqual(array){
 		return false;
 	}
 
-	for (i = 0; i < array.length; i ++){
+	for (var i = 0; i < array.length; i ++){
 		if (array[i] == "_" || array[i] != array[0]){
 			return false;
 		}
@@ -191,10 +191,10 @@ function allInArrayEqual(array){
 }
 
 BoardModel.prototype.checkRows = function(){
-	for (row = 0; row < 3; row ++){
+	for (var row = 0; row < 3; row ++){
 		var testArray = [];
 
-		for (col = 0; col < 3; col ++){
+		for (var col = 0; col < 3; col ++){
 			testArray.push(this.grid[row][col].value);
 			}
 		if (allInArrayEqual(testArray)){
@@ -208,10 +208,10 @@ BoardModel.prototype.checkRows = function(){
 
 BoardModel.prototype.checkCols = function(){
 
-	for (col = 0; col < 3; col ++){
+	for (var col = 0; col < 3; col ++){
 		var testArray = [];
 
-		for (row = 0; row < 3; row ++){
+		for (var row = 0; row < 3; row ++){
 			testArray.push(this.grid[row][col].value);
 			}
 		if (allInArrayEqual(testArray)){
@@ -237,7 +237,7 @@ BoardModel.prototype.checkDiagonals = function(){
 }
 
 //runner function
-game = new Game();
+var game = new Game();
 
 
 </script> </body> </html>
