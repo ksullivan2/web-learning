@@ -11,10 +11,10 @@
 <body><script type="text/javascript">
 "use strict";
 
-//model
-function BoardModel(){
-	
 
+
+//MODEL
+function BoardModel(){
 	//set game properties
 	this.xTurn = true;
 	this.winner = "test";
@@ -27,7 +27,6 @@ function BoardModel(){
 			
 			//add blank data to grid
 			this.grid[row][col] = "_"
-			
 		}
 	}
 }
@@ -42,9 +41,128 @@ BoardModel.prototype.resetBoardModel = function(){
 }
 
 
+BoardModel.prototype.checkRows = function(){
+	this.grid.forEach(row){
+		var testArray = [];
+		row.forEach(square){
+			testArray.push(square);
+		}
+		if (allInArrayEqual(testArray)){
+			this.winner = testArray[0];
+			return true;
+		}
+	}
+	return false;
+}		
 
 
-//controller
+BoardModel.prototype.checkCols = function(){
+	//looping through columns, against the grain of data structure, so easier to do for loop
+
+	for (var col = 0; col < 3; col ++){
+		var testArray = [];
+		for (var row = 0; row < 3; row ++){
+			testArray.push(this.grid[row][col]);
+			}
+		if (allInArrayEqual(testArray)){
+			this.winner = testArray[0];
+			return true;
+		}
+	}
+	return false;
+}
+
+BoardModel.prototype.checkDiagonals = function(){
+	var leftDiagonal = [this.grid[0][0],this.grid[1][1],this.grid[2][2]];
+	var rightDiagonal = [this.grid[0][2],this.grid[1][1],this.grid[2][0]];
+	
+	if (allInArrayEqual(leftDiagonal)){
+		this.winner = leftDiagonal[0];
+		return true;
+	}
+	else if (allInArrayEqual(rightDiagonal)){
+		this.winner = rightDiagonal[0];
+		return true;
+	};
+	return false;
+}
+
+
+
+
+
+//VIEW
+
+function Square(buttonClickHandler){
+	var square = document.createElement("BUTTON");
+	square.setAttribute("class","square");
+	square.addEventListener("click", buttonClickHandler, false);
+
+	var squareContent = document.createTextNode("");	
+	square.appendChild(squareContent);
+
+	//these don't work as expected in the CSS... look into that
+	square.style.height = "50px";
+	square.style.width = "50px";
+
+	return square;
+}
+
+
+function drawBoard(buttonClickHandler){
+	//not actually looping through an object here, just want the ranges
+	for (var row = 0; row < 3; row ++){
+		//create a Div for that row
+		var tempDiv = document.createElement("DIV");
+		document.body.appendChild(tempDiv);
+
+		for (var col = 0; col < 3; col ++){
+			//create and label squares
+			var tempSquare = new Square(buttonClickHandler);
+			var id = row + "," + col;
+		 	tempSquare.id = id;
+		 	tempDiv.appendChild(tempSquare);
+		}
+	}
+}
+
+
+function drawNewGameButton(newGameClickHandler){
+	//create new div
+	var newDiv = document.createElement("DIV");
+	
+	
+	//create button
+	var newGameButton = document.createElement("BUTTON");
+	newGameButton.className = "newGame";
+	newGameButton.id = "newGameButton";
+	newGameButton.addEventListener("click", newGameClickHandler, false);
+
+	//create text node
+	var newGameText = document.createTextNode("New Game");
+	newGameText.id = "newGameText";
+
+	
+	//put 'em all on screen
+	document.body.appendChild(newDiv);
+	newDiv.appendChild(newGameButton);
+	newGameButton.appendChild(newGameText);
+}
+
+function updateViewSquare(pressedSquare, playerToken){
+	//update view with current player's token
+
+	//make squares start with these, just update text
+	pressedSquare.firstChild.nodeValue = playerToken
+	pressedSquare.disabled = "true";
+}
+
+
+
+
+
+//CONTROLLER
+
 function Controller(){}	
 
 
@@ -114,72 +232,6 @@ Controller.prototype.disableAllSquares = function(){
 
 
 
-
-
-//view
-function Square(buttonClickHandler){
-	var square = document.createElement("BUTTON");
-	square.setAttribute("class","square");
-	square.addEventListener("click", buttonClickHandler, false);
-
-	var squareContent = document.createTextNode("");	
-	square.appendChild(squareContent);
-
-	//these don't work as expected in the CSS... look into that
-	square.style.height = "50px";
-	square.style.width = "50px";
-
-	return square;
-}
-
-
-function drawBoard(buttonClickHandler){
-	for (var row = 0; row < 3; row ++){
-		//create a Div for that row
-		var tempDiv = document.createElement("DIV");
-		document.body.appendChild(tempDiv);
-
-		for (var col = 0; col < 3; col ++){
-			//create and label squares
-			var tempSquare = new Square(buttonClickHandler);
-			var id = row + "," + col;
-		 	tempSquare.id = id;
-		 	tempDiv.appendChild(tempSquare);
-		}
-	}
-}
-
-
-function drawNewGameButton(newGameClickHandler){
-	//create new div
-	var newDiv = document.createElement("DIV");
-	
-	
-	//create button
-	var newGameButton = document.createElement("BUTTON");
-	newGameButton.className = "newGame";
-	newGameButton.id = "newGameButton";
-	newGameButton.addEventListener("click", newGameClickHandler, false);
-
-	//create text node
-	var newGameText = document.createTextNode("New Game");
-	newGameText.id = "newGameText";
-
-	
-	//put 'em all on screen
-	document.body.appendChild(newDiv);
-	newDiv.appendChild(newGameButton);
-	newGameButton.appendChild(newGameText);
-}
-
-function updateViewSquare(pressedSquare, playerToken){
-	//update view with current player's token
-
-	//make squares start with these, just update text
-	pressedSquare.firstChild.nodeValue = playerToken
-	pressedSquare.disabled = "true";
-}
-
 			
 //helper functions for model
 
@@ -192,51 +244,7 @@ function allInArrayEqual(array){
 	return true;
 }
 
-BoardModel.prototype.checkRows = function(){
-	for (var row = 0; row < 3; row ++){
-		var testArray = [];
 
-		for (var col = 0; col < 3; col ++){
-			testArray.push(this.grid[row][col]);
-			}
-		if (allInArrayEqual(testArray)){
-			this.winner = testArray[0];
-			return true;
-		}
-	}
-	return false;
-}		
-
-
-BoardModel.prototype.checkCols = function(){
-
-	for (var col = 0; col < 3; col ++){
-		var testArray = [];
-
-		for (var row = 0; row < 3; row ++){
-			testArray.push(this.grid[row][col]);
-			}
-		if (allInArrayEqual(testArray)){
-			this.winner = testArray[0];
-			return true;
-		}
-	}
-	return false;
-}
-
-BoardModel.prototype.checkDiagonals = function(){
-	var leftDiagonal = [this.grid[0][0],this.grid[1][1],this.grid[2][2]];
-	var rightDiagonal = [this.grid[0][2],this.grid[1][1],this.grid[2][0]];
-	if (allInArrayEqual(leftDiagonal)){
-		this.winner = leftDiagonal[0];
-		return true;
-	}
-	else if (allInArrayEqual(rightDiagonal)){
-		this.winner = rightDiagonal[0];
-		return true;
-	};
-	return false;
-}
 
 function runner(){
 	//create controller object
