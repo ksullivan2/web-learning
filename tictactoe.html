@@ -2,67 +2,170 @@
 <style type = "text/css">
 	button{
 		font-size: 20px; 
+		vertical-align: text-top;
 	}
 
 </style>
 
 
 <body><script type="text/javascript">
+//"use strict";
 
-var xTurn = true
+//model
+function Game(){
+	this.xTurn = true;
+	this.board = new BoardModel(this);
+	this.winner = null
+}
 
-function Square(){
-	square = document.createElement("BUTTON");
-	square.setAttribute("type", "button");
-	square.addEventListener("click", buttonClickHandler, false);
+Game.prototype.checkForWin = function(){
+	if (this.board.checkRows() || this.board.checkCols()){
+		console.log("WIN")
+	}
+}
 
-	//these don't work in the CSS... look into that
+function BoardModel(){
+	this.grid = []
+	//simutaneously create data structure and html elements
+	for (row = 0; row < 3; row ++){
+		this.grid[row] = [];
+		for (col = 0; col < 3; col ++){
+			
+			//add squares to grid and div, with references to html elements
+			var id = row + "," + col;
+			this.grid[row][col] = {value: "_", "square": document.getElementById(id)};
+			
+		}
+	}
+
+}
+
+//controller
+Game.prototype.buttonClickHandler = function(event){
+	//check whose turn it was
+	if (this.game.xTurn){
+		var playerToken = "X"	
+	}
+	else {
+		var playerToken = "O"	
+	}
+	
+	//update view
+	var makeAMark = document.createTextNode(playerToken)	
+	event.target.appendChild(makeAMark)
+	event.target.disabled = "true";
+
+	//update controller
+	console.log(event.target.id)
+
+	//swap whose turn it is
+	this.game.xTurn = !this.game.xTurn
+
+	//finish this check later
+	//this.game.checkForWin();
+}
+
+
+
+//view
+function Square(game){
+	
+
+	var square = document.createElement("BUTTON");
+	square.addEventListener("click", game.buttonClickHandler, false);
+
+	//store reference to game object so it can pass events 
+	square.game = game
+
+	//these don't work as expected in the CSS... look into that
 	square.style.height = "50px";
 	square.style.width = "50px";
+
 	return square
 }
 
-function buttonClickHandler(event){
-	if (xTurn){
-		playerToken = document.createTextNode("X")		
-	}
-	else {
-		playerToken = document.createTextNode("O")	
-	}
-	
-	event.target.appendChild(playerToken)
-	event.target.setAttribute("disabled", "true")
-	xTurn = !xTurn
 
-}
-
-function Grid(){
-	grid = []
-
-	//simutaneously create data structure and html elements
+function drawBoard(game){
 	for (row = 0; row < 3; row ++){
-		
-		grid[row] = [];
+		//create a Div for that row
 		var tempDiv = document.createElement("DIV");
-		document.body.appendChild(tempDiv)
-		
+		document.body.appendChild(tempDiv);
+
 		for (col = 0; col < 3; col ++){
-			//create and set attributes of a square
-			tempSquare = new Square()
-			var id = row + "," + col
-		 	tempSquare.setAttribute("id", id)
-			
-			
-			//add squares to grid and div
-			grid[row][col] = tempSquare
-			tempDiv.appendChild(tempSquare);
+			//create and label squares
+			tempSquare = new Square(game);
+			var id = row + "," + col;
+		 	tempSquare.id = id;
+		 	tempDiv.appendChild(tempSquare);
 		}
 	}
-	return grid
 }
 
 
-grid = new Grid()
+
+			
+//helper functions for model
+
+function allInArrayEqual(array){
+	if (array.length < 3){
+		return false;
+	}
+
+	for (i = 0; i < array.length; i ++){
+		if (!array[i] || array[i] != array[0]){
+			return false;
+		}
+	}
+	return true;
+}
+
+/*Board.prototype.checkRows = function(){
+	rows:
+	for (row = 0; row < 3; row ++){
+		var testArray = []
+		cols:
+		for (col = 0; col < 3; row ++){
+			if (this.grid[row][col].firstChild != null){
+				console.log(this.grid[row][col].firstChild.nodeValue)
+				testArray.push(this.grid[row][col].firstChild.nodeValue)
+			}
+			else {
+				break cols;
+			}
+		}
+		console.log(testArray)
+		if (allInArrayEqual(testArray)){
+			this.game.winner = testArray[0]
+			return true
+		}
+	}
+	return false;
+}		
+
+
+Board.prototype.checkCols = function(){
+	cols:
+	for (col = 0; col < 3; col ++){
+		rows:
+		for (row = 0; row < 3; row ++){
+			if (!this.grid[row][col].firstChild){
+				break rows;
+
+			if (this.grid[row][col].firstChild.content != this.grid[0][col].firstChild.content) {
+				break rows;
+				}
+			}
+		return true;
+		}
+	}
+	return false;
+}
+*/
+
+//runner function
+game = new Game()
+drawBoard(game)
+
 
 
 
