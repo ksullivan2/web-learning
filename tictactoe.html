@@ -98,10 +98,7 @@ Controller.prototype.resetView = function(){
 		row.forEach(function (box){
 		//update view
 		box.square.disabled = false;
-		//change to update values, don't remove nodes
-		if (box.square.firstChild){
-			box.square.removeChild(box.square.firstChild);
-		}
+		box.square.firstChild.nodeValue = "";
 		})
 	})
 }
@@ -125,6 +122,9 @@ function Square(buttonClickHandler){
 	var square = document.createElement("BUTTON");
 	square.setAttribute("class","square");
 	square.addEventListener("click", buttonClickHandler, false);
+
+	var squareContent = document.createTextNode("");	
+	square.appendChild(squareContent);
 
 	//these don't work as expected in the CSS... look into that
 	square.style.height = "50px";
@@ -177,8 +177,7 @@ function updateViewSquare(pressedSquare, playerToken){
 	//update view with current player's token
 
 	//make squares start with these, just update text
-	var makeAMark = document.createTextNode(playerToken);	
-	pressedSquare.appendChild(makeAMark);
+	pressedSquare.firstChild.nodeValue = playerToken
 	pressedSquare.disabled = "true";
 }
 
