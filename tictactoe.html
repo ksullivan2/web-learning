@@ -36,8 +36,11 @@ function BoardModel(controller){
 
 BoardModel.prototype.resetBoardModel = function(){
 	//clears board model, does not affect view
-	eachSquare(this.grid, function(gridLocation){
-		gridLocation.value = "_";})
+	this.grid.forEach(function(row){
+		row.forEach(function(box){
+		box.value = "_";
+		})
+	})
 }
 
 
@@ -63,7 +66,7 @@ Controller.prototype.updateModelSquare = function(pressedSquare, playerToken){
 
 Controller.prototype.buttonClickHandler = function(event){
 	//check whose turn it was
-	if (this.controller.board.xTurn){
+	if (this.board.xTurn){
 		var playerToken = "X";	
 	}
 	else {
@@ -72,52 +75,56 @@ Controller.prototype.buttonClickHandler = function(event){
 	
 	//update both model and view
 	updateViewSquare(event.target, playerToken);
-	event.target.controller.updateModelSquare(event.target, playerToken);
+	this.updateModelSquare(event.target, playerToken);
 	
 
 	//check if the controller has been won
-	this.controller.checkForWin();
+	this.checkForWin();
 
 	//swap whose turn it is
-	this.controller.board.xTurn = !this.controller.board.xTurn;
+	this.board.xTurn = !this.board.xTurn;
 }
 
-Controller.prototype.newControllerClickHandler = function(event){
+Controller.prototype.newGameClickHandler = function(event){
 	//update both model and controller
-	this.controller.resetView();
-	this.controller.board.resetBoardModel();
+	this.resetView();
+	this.board.resetBoardModel();
 
 }
 
 Controller.prototype.resetView = function(){
 	//re-enable buttons and clear Xs and Os
-	eachSquare(this.board.grid, function(gridLocation){
+	this.board.grid.forEach(function (row) {
+		row.forEach(function (box){
 		//update view
-		gridLocation.square.disabled = false;
-		if (gridLocation.square.firstChild){
-			gridLocation.square.removeChild(gridLocation.square.firstChild);
+		box.square.disabled = false;
+		//change to update values, don't remove nodes
+		if (box.square.firstChild){
+			box.square.removeChild(box.square.firstChild);
 		}
+		})
 	})
 }
 
 Controller.prototype.disableAllSquares = function(){
 	//disable click input on unused squares, keeps Xs and Os
-	eachSquare(this.board.grid, function(gridLocation){
-		gridLocation.square.disabled = true;})
-
+	this.board.grid.forEach(function (row) {
+		row.forEach(function (box){
+			box.square.disabled = true;
+		})
+	})
 }
 
 
 
 
+
+
 //view
-function Square(controller){
+function Square(buttonClickHandler){
 	var square = document.createElement("BUTTON");
 	square.setAttribute("class","square");
-	square.addEventListener("click", controller.buttonClickHandler, false);
-
-	//store reference to controller object so it can pass events 
-	square.controller = controller;
+	square.addEventListener("click", buttonClickHandler, false);
 
 	//these don't work as expected in the CSS... look into that
 	square.style.height = "50px";
@@ -127,7 +134,7 @@ function Square(controller){
 }
 
 
-function drawBoard(controller){
+function drawBoard(buttonClickHandler){
 	for (var row = 0; row < 3; row ++){
 		//create a Div for that row
 		var tempDiv = document.createElement("DIV");
@@ -135,7 +142,7 @@ function drawBoard(controller){
 
 		for (var col = 0; col < 3; col ++){
 			//create and label squares
-			var tempSquare = new Square(controller);
+			var tempSquare = new Square(buttonClickHandler);
 			var id = row + "," + col;
 		 	tempSquare.id = id;
 		 	tempDiv.appendChild(tempSquare);
@@ -144,17 +151,16 @@ function drawBoard(controller){
 }
 
 
-function drawNewControllerButton(controller){
+function drawNewGameButton(newGameClickHandler){
 	//create new div
 	var newDiv = document.createElement("DIV");
 	
 	
 	//create button
 	var newGameButton = document.createElement("BUTTON");
-	newGameButton.className = "newController";
+	newGameButton.className = "newGame";
 	newGameButton.id = "newGameButton";
-	newGameButton.addEventListener("click", controller.newControllerClickHandler, false);
-	newGameButton.controller = controller;
+	newGameButton.addEventListener("click", newGameClickHandler, false);
 
 	//create text node
 	var newGameText = document.createTextNode("New Game");
@@ -169,6 +175,8 @@ function drawNewControllerButton(controller){
 
 function updateViewSquare(pressedSquare, playerToken){
 	//update view with current player's token
+
+	//make squares start with these, just update text
 	var makeAMark = document.createTextNode(playerToken);	
 	pressedSquare.appendChild(makeAMark);
 	pressedSquare.disabled = "true";
@@ -176,21 +184,10 @@ function updateViewSquare(pressedSquare, playerToken){
 
 			
 //helper functions for model
-function eachSquare(grid, action){
-	for (var row = 0; row < 3; row ++){
-		for (var col = 0; col < 3; col ++){
-			action(grid[row][col]);
-		}
-	}
-}
 
 function allInArrayEqual(array){
-	if (array.length < 3){
-		return false;
-	}
-
 	for (var i = 0; i < array.length; i ++){
-		if (array[i] == "_" || array[i] != array[0]){
+		if (array[i] === "_" || array[i] !== array[0]){
 			return false;
 		}
 	}
@@ -248,8 +245,8 @@ function runner(){
 	var controller = new Controller();
 	
 	//create view
-	drawBoard(controller);
-	drawNewControllerButton(controller);
+	drawBoard(controller.buttonClickHandler.bind(controller));
+	drawNewGameButton(controller.newGameClickHandler.bind(controller));
 
 	//the controller board contains a reference to the objects on screen, so must be called after the view is created
 	controller.board = new BoardModel(controller);
