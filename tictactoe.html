@@ -13,14 +13,8 @@
 
 //model
 function Game(){
-	//create view
-	drawBoard(this);
-	drawNewGameButton(this);
-
-
 	//set game properties
 	this.xTurn = true;
-	this.board = new BoardModel(this);
 	this.winner = "test";
 }
 
@@ -236,8 +230,15 @@ BoardModel.prototype.checkDiagonals = function(){
 	return false;
 }
 
-//runner function
-var game = new Game();
+function runner(){
+	var game = new Game();
+	//create view
+	game.board = new BoardModel(game);
+	drawBoard(game);
+	drawNewGameButton(game);
+}
+
+runner()
 
 
 </script> </body> </html>
