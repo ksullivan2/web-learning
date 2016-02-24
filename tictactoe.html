@@ -25,6 +25,14 @@ Game.prototype.checkForWin = function(){
 	}
 }
 
+Game.prototype.updateModelSquare = function(pressedSquare, playerToken){
+	//update model
+	var row = pressedSquare.id[0];
+	var col = pressedSquare.id[2];
+	this.board.grid[row][col].value = playerToken;
+}
+
+
 function BoardModel(game){
 	//save reference to game object
 	this.game = game;
@@ -49,12 +57,7 @@ BoardModel.prototype.resetBoardModel = function(){
 		gridLocation.value = "_";})
 }
 
-Game.prototype.updateModelSquare = function(pressedSquare, playerToken){
-	//update model
-	var row = pressedSquare.id[0];
-	var col = pressedSquare.id[2];
-	this.board.grid[row][col].value = playerToken;
-}
+
 
 
 //controller
