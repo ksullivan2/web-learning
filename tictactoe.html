@@ -49,6 +49,13 @@ BoardModel.prototype.resetBoardModel = function(){
 		gridLocation.value = "_";})
 }
 
+Game.prototype.updateModelSquare = function(pressedSquare, playerToken){
+	//update model
+	var row = pressedSquare.id[0];
+	var col = pressedSquare.id[2];
+	this.board.grid[row][col].value = playerToken;
+}
+
 
 //controller
 Game.prototype.buttonClickHandler = function(event){
@@ -60,15 +67,10 @@ Game.prototype.buttonClickHandler = function(event){
 		var playerToken = "O";	
 	}
 	
-	//update view
-	var makeAMark = document.createTextNode(playerToken);	
-	event.target.appendChild(makeAMark);
-	event.target.disabled = "true";
-
-	//update controller
-	var row = event.target.id[0];
-	var col = event.target.id[2];
-	this.game.board.grid[row][col].value = playerToken;
+	//update both model and view
+	updateViewSquare(event.target, playerToken);
+	event.target.game.updateModelSquare(event.target, playerToken);
+	
 
 	//check if the game has been won
 	this.game.checkForWin();
@@ -162,6 +164,12 @@ function drawNewGameButton(game){
 	newGameButton.appendChild(newGameText);
 }
 
+function updateViewSquare(pressedSquare, playerToken){
+	//update view with current player's token
+	var makeAMark = document.createTextNode(playerToken);	
+	pressedSquare.appendChild(makeAMark);
+	pressedSquare.disabled = "true";
+}
 
 			
 //helper functions for model
