@@ -21,7 +21,7 @@ function Game(){
 	//set game properties
 	this.xTurn = true;
 	this.board = new BoardModel(this);
-	this.winner = "test"
+	this.winner = "test";
 }
 
 Game.prototype.checkForWin = function(){
@@ -31,9 +31,9 @@ Game.prototype.checkForWin = function(){
 }
 
 function BoardModel(game){
-	this.game = game
+	this.game = game;
 
-	this.grid = []
+	this.grid = [];
 	//simutaneously create data structure and html elements
 	for (row = 0; row < 3; row ++){
 		this.grid[row] = [];
@@ -52,24 +52,24 @@ function BoardModel(game){
 Game.prototype.buttonClickHandler = function(event){
 	//check whose turn it was
 	if (this.game.xTurn){
-		var playerToken = "X"	
+		var playerToken = "X";	
 	}
 	else {
-		var playerToken = "O"	
+		var playerToken = "O";	
 	}
 	
 	//update view
-	var makeAMark = document.createTextNode(playerToken)	
-	event.target.appendChild(makeAMark)
+	var makeAMark = document.createTextNode(playerToken);	
+	event.target.appendChild(makeAMark);
 	event.target.disabled = "true";
 
 	//update controller
-	var row = event.target.id[0]
-	var col = event.target.id[2]
-	this.game.board.grid[row][col].value = playerToken
+	var row = event.target.id[0];
+	var col = event.target.id[2];
+	this.game.board.grid[row][col].value = playerToken;
 
 	//swap whose turn it is
-	this.game.xTurn = !this.game.xTurn
+	this.game.xTurn = !this.game.xTurn;
 
 	//finish this check later
 	this.game.checkForWin();
@@ -86,7 +86,7 @@ BoardModel.prototype.resetAllSquares = function(){
 	//disable click input on unused squares, keeps Xs and Os
 	eachSquare(this.grid, function(gridLocation){
 		//update model
-		gridLocation.value = "_"
+		gridLocation.value = "_";
 
 		//update view
 		gridLocation.square.disabled = false;
@@ -99,7 +99,7 @@ BoardModel.prototype.resetAllSquares = function(){
 BoardModel.prototype.disableAllSquares = function(){
 	//disable click input on unused squares, keeps Xs and Os
 	eachSquare(this.grid, function(gridLocation){
-		gridLocation.square.disabled = true})
+		gridLocation.square.disabled = true;})
 
 }
 
@@ -107,17 +107,17 @@ BoardModel.prototype.disableAllSquares = function(){
 //view
 function Square(game){
 	var square = document.createElement("BUTTON");
-	square.setAttribute("class","square")
+	square.setAttribute("class","square");
 	square.addEventListener("click", game.buttonClickHandler, false);
 
 	//store reference to game object so it can pass events 
-	square.game = game
+	square.game = game;
 
 	//these don't work as expected in the CSS... look into that
 	square.style.height = "50px";
 	square.style.width = "50px";
 
-	return square
+	return square;
 }
 
 
@@ -152,17 +152,17 @@ function drawNewGameButton(game){
 	newGameButton.className = "newGame";
 	newGameButton.id = "newGameButton";
 	newGameButton.addEventListener("click", game.newGameClickHandler, false);
-	newGameButton.game = game
+	newGameButton.game = game;
 
 	//create text node
 	var newGameText = document.createTextNode("New Game");
-	newGameText.id = "newGameText"
+	newGameText.id = "newGameText";
 
 	
 	//put 'em all on screen
 	document.body.appendChild(newDiv);
 	newDiv.appendChild(newGameButton);
-	newGameButton.appendChild(newGameText)
+	newGameButton.appendChild(newGameText);
 }
 
 
@@ -192,13 +192,13 @@ function allInArrayEqual(array){
 
 BoardModel.prototype.checkRows = function(){
 	for (row = 0; row < 3; row ++){
-		var testArray = []
+		var testArray = [];
 
 		for (col = 0; col < 3; col ++){
 			testArray.push(this.grid[row][col].value);
 			}
 		if (allInArrayEqual(testArray)){
-			this.game.winner = testArray[0]
+			this.game.winner = testArray[0];
 			return true;
 		}
 	}
@@ -209,13 +209,13 @@ BoardModel.prototype.checkRows = function(){
 BoardModel.prototype.checkCols = function(){
 
 	for (col = 0; col < 3; col ++){
-		var testArray = []
+		var testArray = [];
 
 		for (row = 0; row < 3; row ++){
 			testArray.push(this.grid[row][col].value);
 			}
 		if (allInArrayEqual(testArray)){
-			this.game.winner = testArray[0]
+			this.game.winner = testArray[0];
 			return true;
 		}
 	}
@@ -223,28 +223,21 @@ BoardModel.prototype.checkCols = function(){
 }
 
 BoardModel.prototype.checkDiagonals = function(){
-	var leftDiagonal = [this.grid[0][0].value,this.grid[1][1].value,this.grid[2][2].value]
-	var rightDiagonal = [this.grid[0][2].value,this.grid[1][1].value,this.grid[2][0].value]
+	var leftDiagonal = [this.grid[0][0].value,this.grid[1][1].value,this.grid[2][2].value];
+	var rightDiagonal = [this.grid[0][2].value,this.grid[1][1].value,this.grid[2][0].value];
 	if (allInArrayEqual(leftDiagonal)){
 		this.game.winner = leftDiagonal[0];
-		return true
+		return true;
 	}
 	else if (allInArrayEqual(rightDiagonal)){
-		this.game.winner = rightDiagonal[0]
-		return true
+		this.game.winner = rightDiagonal[0];
+		return true;
 	};
 	return false;
 }
 
 //runner function
-game = new Game()
-
-
-
-
-
-
-
+game = new Game();
 
 
 </script> </body> </html>
