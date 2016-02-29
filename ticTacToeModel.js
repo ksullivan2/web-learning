@@ -1,4 +1,7 @@
 //MODEL
+"use strict";
+
+
 function BoardModel(){
 	//set game properties
 	this.xTurn = true;

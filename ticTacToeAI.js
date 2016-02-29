@@ -1,12 +1,9 @@
+"use strict";
+
+
 function computerMove(board){
 	//create an array of possible next moves;
-	var possibleStates = createPossibleStates(board);
-
-	possibleStates.forEach(function(possibleMove){
-		possibleMove.xTurn = !possibleMove.xTurn;
-		possibleMove.score = minimax(possibleMove);
-	})
-
+	board = minimax(board);
 
 }
 
@@ -14,54 +11,52 @@ function computerMove(board){
 
 
 function minimax(board, count){
-	
+	//count will keep track of how many levels deep we are in the recursion
+	//always initialize count with -1
+
 	//base case: check for win or draw
 	if (board.checkForWin()){
 		if (board.winner === "X") {
-			console.log("base case: 10")
 			return 10 - count;
 		}
 		else{
-			console.log("base case: -10")
 			return - 10 + count;
 		}
 	}
 	
 	if (board.checkForDraw()){
-		console.log("base case: 0")
 		return 0;
 	
 	}
 
+	//create an array of possible next moves
 	var possibleStates = createPossibleStates(board);
-	
-	possibleStates.forEach(function(possibleMove){
-		possibleMove.xTurn = !possibleMove.xTurn;
-		possibleMove.score = minimax(possibleMove, count+1);
-	})
-			
-	console.log("possible states are: ",possibleStates);
 
-	//loop through possible moves and return the max/min move
+	//we'll store max and mins here
 	var max = 0;
 	var min = 0;
 
 	var maxBoard = null;
 	var minBoard = null;
-
+	
+	//for each possible move, figure out the min/max possible score
+	//could store indexes instead, probably better than storing board objects
 	possibleStates.forEach(function(possibleMove){
+		possibleMove.xTurn = !possibleMove.xTurn;
+		possibleMove.score = minimax(possibleMove, count+1);
+
+		//save the score for each
 		if (possibleMove.score >= max){
-			//console.log(possibleMove);
 			max = possibleMove.score;
 			maxBoard = possibleMove;
 		}
 		if (possibleMove.score <= min){
-			//console.log(possibleMove);
 			min = possibleMove.score;
 			minBoard = possibleMove;
 		}	
 	})
 
+	//if it's the top level of this loop, return optimal move. else, return the score.
 	if (board.xTurn){
 		if (count >=0 ){
 			return max;
