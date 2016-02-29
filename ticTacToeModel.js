@@ -32,14 +32,16 @@ BoardModel.prototype.checkForWin = function(){
 }
 
 BoardModel.prototype.checkForDraw = function(){
+	var draw = true;
+	
 	this.grid.forEach(function(row){
 		row.forEach(function(square){
 			if (square === "_"){
-				return false;
+				draw = false;
 			}
 		})
 	})
-	return true;
+	return draw;
 }
 
 BoardModel.prototype.checkRows = function(){

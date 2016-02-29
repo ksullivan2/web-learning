@@ -11,7 +11,8 @@ function minimax(board){
 		}
 	}
 	
-	if (board.checkForDraw()){
+	else if (board.checkForDraw()){
+		console.log("draw")
 		return 0;
 	}
 	
@@ -21,18 +22,21 @@ function minimax(board){
 	//loop through board looking for empty squares
 	for (var row = 0; row < 3; row++){
 		for(var col = 0; col < 3; col++){
-			if (board[row][col] === "_"){
+			if (board.grid[row][col] === "_"){
+				console.log("empty square at ",row,",",col);
 				var tempBoard = copyBoard(board);
 				possibleStates.push(tempBoard);
+				console.log("state added to: ", possibleStates);
 
 				if (tempBoard.xTurn){
-					tempBoard[row][col] = "X";
+					tempBoard.grid[row][col] = "X";
 				}
 				else{
-					tempBoard[row][col] = "O";
+					tempBoard.grid[row][col] = "O";
 				}
 
 				tempBoard.score = minimax(tempBoard);
+				console.log("score added: ", tempBoard.score)
 
 			}
 		}
@@ -56,7 +60,7 @@ function minimax(board){
 		}	
 	})
 
-	if (xTurn){
+	if (board.xTurn){
 		board = maxBoard;
 	}
 	else{
