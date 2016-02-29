@@ -38,10 +38,37 @@ function minimax(board){
 		}
 	}
 
+	//loop through possible moves and return the max/min move
+	var max = 0;
+	var min = 0;;
+
+	var maxBoard = null;
+	var minBoard = null;
+
+	possibleStates.forEach(function(possibleMove){
+		if (possibleMove.score >= max){
+			max = possibleMove.score;
+			maxBoard = possibleMove;
+		}
+		if (possibleMove.score <= min){
+			min = possibleMove.score;
+			minBoard = possibleMove;
+		}	
+	})
+
+	if (xTurn){
+		board = maxBoard;
+	}
+	else{
+		board = minBoard;
+	}
+
+	return board;
+
 }
 
 function copyBoard(sourceBoard){
-	var newBoard = new Board();
+	var newBoard = new BoardModel();
 
 	for (var row = 0; row < 3; row++){
 		for(var col = 0; col < 3; col++){

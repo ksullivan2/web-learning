@@ -2,7 +2,7 @@
 function BoardModel(){
 	//set game properties
 	this.xTurn = true;
-	this.winner = "test";
+	this.winner = null;
 
 	//create grid
 	this.grid = [];
@@ -88,4 +88,15 @@ BoardModel.prototype.checkDiagonals = function(){
 	return false;
 }
 
+
+//helper functions for model
+
+function allInArrayEqual(array){
+	for (var i = 0; i < array.length; i ++){
+		if (array[i] === "_" || array[i] !== array[0]){
+			return false;
+		}
+	}
+	return true;
+}
 
