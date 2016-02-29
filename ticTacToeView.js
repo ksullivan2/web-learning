@@ -74,3 +74,14 @@ function disableAllSquares(){
 		squares[i].disabled = true;
 	}
 }
+
+function resetView(){
+	//re-enable buttons and clear Xs and Os
+	var squares = document.getElementsByClassName("square");
+	//returns a node list, must be iterated through, can't use forEach =(
+
+	for (var i = 0; i < squares.length; i++){
+		squares[i].disabled = false;
+		squares[i].firstChild.nodeValue = "";
+	}
+}

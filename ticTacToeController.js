@@ -4,16 +4,9 @@
 function Controller(){}	
 
 
-
-
-Controller.prototype.updateModelSquare = function(pressedSquare, playerToken){
-	//update model
-	var row = pressedSquare.id[0];
-	var col = pressedSquare.id[2];
-	this.board.grid[row][col] = playerToken;
-}
-
 Controller.prototype.buttonClickHandler = function(event){
+	var pressedSquare = event.target
+
 	//check whose turn it was
 	if (this.board.xTurn){
 		var playerToken = "X";	
@@ -23,13 +16,14 @@ Controller.prototype.buttonClickHandler = function(event){
 	}
 	
 	//update both model and view
-	updateViewSquare(event.target, playerToken);
-	this.updateModelSquare(event.target, playerToken);
+	updateViewSquare(pressedSquare, playerToken);
+	this.board.updateModelSquare(pressedSquare, playerToken);
 	
 
 	//check if the game has been won
 	if (this.board.checkForWin()){
-		disableAllSquares()
+		this.winGame();
+		
 	}
 
 
@@ -39,21 +33,16 @@ Controller.prototype.buttonClickHandler = function(event){
 
 Controller.prototype.newGameClickHandler = function(event){
 	//update both model and controller
-	this.resetView();
+	resetView();
 	this.board = new BoardModel()
 
 }
 
-Controller.prototype.resetView = function(){
-	//re-enable buttons and clear Xs and Os
-	var squares = document.getElementsByClassName("square");
-	//returns a node list, must be iterated through, can't use forEach =(
-
-	for (var i = 0; i < squares.length; i++){
-		squares[i].disabled = false;
-		squares[i].firstChild.nodeValue = "";
-	}
+Controller.prototype.winGame = function(){
+	disableAllSquares()
 }
+
+
 
 
 

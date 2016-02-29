@@ -28,13 +28,14 @@
 function runner(){
 	//create controller object
 	var controller = new Controller();
+	controller.board = new BoardModel();
 	
 	//create view
 	drawBoard(controller.buttonClickHandler.bind(controller));
 	drawNewGameButton(controller.newGameClickHandler.bind(controller));
 
-	//the controller board contains a reference to the objects on screen, so must be called after the view is created
-	controller.board = new BoardModel();
+	
+	
 
 }
 

@@ -19,7 +19,12 @@ function BoardModel(){
 	}
 }
 
-
+BoardModel.prototype.updateModelSquare = function(pressedSquare, playerToken){
+	//update model
+	var row = pressedSquare.id[0];
+	var col = pressedSquare.id[2];
+	this.grid[row][col] = playerToken;
+}
 
 BoardModel.prototype.checkForWin = function(){
 	return (this.checkRows() || this.checkCols() || this.checkDiagonals());
