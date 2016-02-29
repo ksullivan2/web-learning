@@ -124,7 +124,8 @@ Controller.prototype.buttonClickHandler = function(event){
 		this.disableAllSquares()
 	}
 
-	console.log(minimax(this.board));
+	//console.log(minimax(this.board));
+	console.log(copyBoard(this.board));
 
 
 	//swap whose turn it is
@@ -186,6 +187,7 @@ function runner(){
 
 	//the controller board contains a reference to the objects on screen, so must be called after the view is created
 	controller.board = new BoardModel();
+
 }
 
 runner()
