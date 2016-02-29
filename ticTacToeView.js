@@ -1,5 +1,5 @@
 //VIEW
-
+"use strict";
 
 function Square(buttonClickHandler){
 	var square = document.createElement("BUTTON");
@@ -63,4 +63,14 @@ function updateViewSquare(pressedSquare, playerToken){
 	//make squares start with these, just update text
 	pressedSquare.firstChild.nodeValue = playerToken
 	pressedSquare.disabled = "true";
+}
+
+function disableAllSquares(){
+	//disable click input on unused squares, keeps Xs and Os
+	var squares = document.getElementsByClassName("square");
+	//returns a node list, must be iterated through, can't use forEach =(
+
+	for (var i = 0; i < squares.length; i++){
+		squares[i].disabled = true;
+	}
 }

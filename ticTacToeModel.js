@@ -19,19 +19,10 @@ function BoardModel(){
 	}
 }
 
-BoardModel.prototype.resetBoardModel = function(){
-	//clears board model, does not affect view
-	this.grid.forEach(function(row){
-		row.forEach(function(box){
-		box = "_";
-		})
-	})
-}
 
 
 BoardModel.prototype.checkForWin = function(){
 	return (this.checkRows() || this.checkCols() || this.checkDiagonals());
-	
 }
 
 BoardModel.prototype.checkForDraw = function(){

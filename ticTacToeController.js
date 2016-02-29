@@ -29,11 +29,8 @@ Controller.prototype.buttonClickHandler = function(event){
 
 	//check if the game has been won
 	if (this.board.checkForWin()){
-		this.disableAllSquares()
+		disableAllSquares()
 	}
-
-	//minimax(this.board);
-	//console.log(copyBoard(this.board));
 
 
 	//swap whose turn it is
@@ -43,7 +40,7 @@ Controller.prototype.buttonClickHandler = function(event){
 Controller.prototype.newGameClickHandler = function(event){
 	//update both model and controller
 	this.resetView();
-	this.board.resetBoardModel();
+	this.board = new BoardModel()
 
 }
 
@@ -58,13 +55,5 @@ Controller.prototype.resetView = function(){
 	}
 }
 
-Controller.prototype.disableAllSquares = function(){
-	//disable click input on unused squares, keeps Xs and Os
-	var squares = document.getElementsByClassName("square");
-	//returns a node list, must be iterated through, can't use forEach =(
 
-	for (var i = 0; i < squares.length; i++){
-		squares[i].disabled = true;
-	}
-}
 
