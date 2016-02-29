@@ -1,3 +1,5 @@
+
+
 <html>
 <style type = "text/css">
 	button.square{
@@ -8,84 +10,12 @@
 </style>
 
 
-<body><script type="text/javascript">
+
+<body>
+<script type="text/javascript" src="ticTacToeAI.js"></script>
+<script type="text/javascript" src="ticTacToeModel.js"></script>
+<script type="text/javascript">
 "use strict";
-
-
-
-//MODEL
-function BoardModel(){
-	//set game properties
-	this.xTurn = true;
-	this.winner = "test";
-
-	//create grid
-	this.grid = [];
-	for (var row = 0; row < 3; row ++){
-		this.grid[row] = [];
-		for (var col = 0; col < 3; col ++){
-			
-			//add blank data to grid
-			this.grid[row][col] = "_"
-		}
-	}
-}
-
-BoardModel.prototype.resetBoardModel = function(){
-	//clears board model, does not affect view
-	this.grid.forEach(function(row){
-		row.forEach(function(box){
-		box = "_";
-		})
-	})
-}
-
-
-BoardModel.prototype.checkRows = function(){
-	this.grid.forEach(function(row){
-		var testArray = [];
-		row.forEach(function(square){
-			testArray.push(square);
-		})
-		if (allInArrayEqual(testArray)){
-			this.winner = testArray[0];
-			return true;
-		}
-	})
-	return false;
-}		
-
-
-BoardModel.prototype.checkCols = function(){
-	//looping through columns, against the grain of data structure, so easier to do for loop
-
-	for (var col = 0; col < 3; col ++){
-		var testArray = [];
-		for (var row = 0; row < 3; row ++){
-			testArray.push(this.grid[row][col]);
-			}
-		if (allInArrayEqual(testArray)){
-			this.winner = testArray[0];
-			return true;
-		}
-	}
-	return false;
-}
-
-BoardModel.prototype.checkDiagonals = function(){
-	var leftDiagonal = [this.grid[0][0],this.grid[1][1],this.grid[2][2]];
-	var rightDiagonal = [this.grid[0][2],this.grid[1][1],this.grid[2][0]];
-	
-	if (allInArrayEqual(leftDiagonal)){
-		this.winner = leftDiagonal[0];
-		return true;
-	}
-	else if (allInArrayEqual(rightDiagonal)){
-		this.winner = rightDiagonal[0];
-		return true;
-	};
-	return false;
-}
 
 
 
@@ -166,12 +96,7 @@ function updateViewSquare(pressedSquare, playerToken){
 function Controller(){}	
 
 
-Controller.prototype.checkForWin = function(){
-	if (this.board.checkRows() || this.board.checkCols() || this.board.checkDiagonals()){
-		this.disableAllSquares();
-		//want to change this to create a win event or something, don't like that the model bypasses the controller
-	}
-}
+
 
 Controller.prototype.updateModelSquare = function(pressedSquare, playerToken){
 	//update model
@@ -194,8 +119,13 @@ Controller.prototype.buttonClickHandler = function(event){
 	this.updateModelSquare(event.target, playerToken);
 	
 
-	//check if the controller has been won
-	this.checkForWin();
+	//check if the game has been won
+	if (this.board.checkForWin()){
+		this.disableAllSquares()
+	}
+
+	console.log(minimax(this.board));
+
 
 	//swap whose turn it is
 	this.board.xTurn = !this.board.xTurn;
