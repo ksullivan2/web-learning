@@ -8,11 +8,13 @@
 
 var testBoard = new BoardModel();
 
-testBoard.grid = [["0","X","O"],["X","X","O"],["_","_","_"]];
+testBoard.grid = [["_","_","O"],
+				  ["_","X","_"],
+				  ["X","O","O"]];
 
 
 
 
-console.log(minimax(testBoard));
+console.log(minimax(testBoard, -1));
 
 </script></body></html>
