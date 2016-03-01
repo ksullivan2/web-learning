@@ -1,0 +1,93 @@
+
+h1{
+	font-family: Verdana;
+	text-align: center;
+}	
+
+#mainDIV{
+	position: relative;
+	width: 500px;
+	height: 500px;
+}
+
+#boardDIV{
+	position: absolute;
+	top:0;
+	left: 20%;
+
+}
+
+div{
+	margin: auto;
+	width: 300px;
+	float: center;
+}
+
+.square{
+	font-size: 20px; 
+	vertical-align: text-top;;
+	padding: 10px;
+	width: 100px;
+	height: 100px;
+	background-color: white;
+	border: 0px;
+}
+
+
+#newGameButton{
+	font-size: 15px;
+	font-family: sans-serif;
+	background-color: white;
+	margin-top: 30px;
+	padding:10px;
+	margin-left: 33%;
+	border-radius: 10px;
+	border: 1px dashed black;
+}
+
+/*messages show up when game is over*/
+#messageDIV{
+	font-family: Impact;
+	color:red;
+	font-size: 40px;
+	text-align: center;
+	
+	
+	width: 300px;
+	transform: rotate(-30deg);
+
+	position: absolute;
+	top:10%;
+	left: 20%
+}
+
+#loseText{
+	display: none;
+}
+
+#drawText{
+	display: none;
+}
+
+
+/*draw lines by giving squares borders...*/
+#s01{
+	border-right: 2px solid black;
+	border-left: 2px solid black;
+}
+#s11{
+	border: 2px solid black;
+}
+#s21{
+	border-right: 2px solid black;
+	border-left: 2px solid black;
+}
+#s10{
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+}
+#s12{
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+}
+
