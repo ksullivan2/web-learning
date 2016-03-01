@@ -1,15 +1,6 @@
 "use strict";
 
 
-function computerMove(board){
-	//create an array of possible next moves;
-	board = minimax(board);
-
-}
-
-
-
-
 function minimax(board, count){
 	//count will keep track of how many levels deep we are in the recursion
 	//always initialize count with -1
@@ -93,11 +84,11 @@ function createPossibleStates(board){
 				
 				if (tempBoard.xTurn){
 					tempBoard.grid[row][col] = "X";
-					console.log("X @ ",row,",",col);
+					//console.log("X @ ",row,",",col);
 				}
 				else{
 					tempBoard.grid[row][col] = "O";
-					console.log("O @ ",row,",",col);
+					//console.log("O @ ",row,",",col);
 				}
 			}
 		}

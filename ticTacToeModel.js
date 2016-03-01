@@ -44,13 +44,15 @@ BoardModel.prototype.checkForDraw = function(){
 }
 
 BoardModel.prototype.checkRows = function(){
-	this.grid.forEach(function(row){
+	var self = this;
+
+	self.grid.forEach(function(row){
 		var testArray = [];
 		row.forEach(function(square){
 			testArray.push(square);
 		})
 		if (allInArrayEqual(testArray)){
-			this.winner = testArray[0];
+			self.winner = testArray[0];
 			return true;
 		}
 	})

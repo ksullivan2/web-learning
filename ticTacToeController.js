@@ -22,13 +22,15 @@ Controller.prototype.buttonClickHandler = function(event){
 
 	//check if the game has been won
 	if (this.board.checkForWin()){
-		this.winGame();
-		
+		this.winGame();	
 	}
 
-
-	//swap whose turn it is
-	this.board.xTurn = !this.board.xTurn;
+	else{
+		//swap whose turn it is
+		this.board.xTurn = !this.board.xTurn;
+		this.computerMove();
+	}
+	
 }
 
 Controller.prototype.newGameClickHandler = function(event){
@@ -43,6 +45,21 @@ Controller.prototype.winGame = function(){
 }
 
 
+Controller.prototype.computerMove = function(){
+	//updates the model to the computer's next best possible move
+	this.board = minimax(this.board, -1);
+	this.updateViewFromModel();
 
+	//also changes turn? need to check
+}
+
+
+Controller.prototype.updateViewFromModel = function(){
+	for (var row = 0; row < 3; row++){
+		for(var col = 0; col < 3; col++){
+			document.getElementById(row+","+col).firstChild = this.board.grid[row][col];
+		}
+	}
+}
 
 
