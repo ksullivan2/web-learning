@@ -34,14 +34,26 @@ Controller.prototype.buttonClickHandler = function(event){
 }
 
 Controller.prototype.newGameClickHandler = function(event){
-	//update both model and controller
+	//update both model and view
 	resetView();
 	this.board = new BoardModel()
+
+	//reset view
+	document.getElementById("drawText").style.display = "none";
+	document.getElementById("loseText").style.display = "none";
+
 
 }
 
 Controller.prototype.winGame = function(){
 	disableAllSquares()
+	if (this.board.winner){
+		document.getElementById("loseText").style.display = "block";
+	}
+	else{
+		document.getElementById("drawText").style.display = "block";
+	}
+	
 }
 
 
@@ -62,7 +74,7 @@ Controller.prototype.updateViewFromModel = function(){
 	for (var row = 0; row < 3; row++){
 		for(var col = 0; col < 3; col++){
 			if (this.board.grid[row][col] != "_"){
-				var square = document.getElementById(row+","+col);
+				var square = document.getElementById("s"+row+col);
 				square.firstChild.nodeValue = this.board.grid[row][col];
 				square.disabled = true;
 

@@ -6,26 +6,28 @@ function Square(buttonClickHandler){
 	square.setAttribute("class","square");
 	square.addEventListener("click", buttonClickHandler, false);
 
-	var squareContent = document.createTextNode("");
+	var squareContent = document.createTextNode("");	
 	square.appendChild(squareContent);
+
+	//these don't work as expected in the CSS... look into that
+	//square.style.height = "50px";
+	//square.style.width = "50px";
 
 	return square;
 }
 
 
 function drawBoard(buttonClickHandler){
-	
-
-	
+	//not actually looping through an object here, just want the ranges
 	for (var row = 0; row < 3; row ++){
 		//create a Div for that row
 		var tempDiv = document.createElement("DIV");
-		document.getElementById("boardDIV").appendChild(tempDiv);
+		document.body.appendChild(tempDiv);
 
 		for (var col = 0; col < 3; col ++){
 			//create and label squares
 			var tempSquare = new Square(buttonClickHandler);
-			var id = "s" + row + col;
+			var id = row + "," + col;
 		 	tempSquare.id = id;
 		 	tempDiv.appendChild(tempSquare);
 		}
@@ -50,7 +52,7 @@ function drawNewGameButton(newGameClickHandler){
 
 	
 	//put 'em all on screen
-	document.getElementById("boardDIV").appendChild(newDiv);
+	document.body.appendChild(newDiv);
 	newDiv.appendChild(newGameButton);
 	newGameButton.appendChild(newGameText);
 }

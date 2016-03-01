@@ -1,0 +1,49 @@
+
+
+<html>
+<style type = "text/css">
+	.square{
+		font-size: 20px; 
+		vertical-align: text-top;
+	}
+
+	div{
+		float: center;
+	}
+
+</style>
+
+
+
+<body>
+<script type="text/javascript" src="ticTacToeAI.js"></script>
+<script type="text/javascript" src="ticTacToeModel.js"></script>
+<script type="text/javascript" src="ticTacToeView.js"></script>
+<script type="text/javascript" src="ticTacToeController.js"></script>
+
+<script type="text/javascript">
+
+"use strict";
+
+
+
+
+
+function runner(){
+	//create controller object
+	var controller = new Controller();
+	controller.board = new BoardModel();
+	
+	//create view
+	drawBoard(controller.buttonClickHandler.bind(controller));
+	drawNewGameButton(controller.newGameClickHandler.bind(controller));
+
+	
+	
+
+}
+
+runner()
+
+
+</script> </body> </html>
