@@ -21,7 +21,7 @@ Controller.prototype.buttonClickHandler = function(event){
 	
 
 	//check if the game has been won
-	if (this.board.checkForWin()){
+	if (this.board.checkForWin() || this.board.checkForDraw()){
 		this.winGame();	
 	}
 
@@ -50,14 +50,23 @@ Controller.prototype.computerMove = function(){
 	this.board = minimax(this.board, -1);
 	this.updateViewFromModel();
 
-	//also changes turn? need to check
+	//check if the game has been won
+	if (this.board.checkForWin()){
+		console.log("computer check for win")
+		this.winGame();	
+	}
 }
 
 
 Controller.prototype.updateViewFromModel = function(){
 	for (var row = 0; row < 3; row++){
 		for(var col = 0; col < 3; col++){
-			document.getElementById(row+","+col).firstChild = this.board.grid[row][col];
+			if (this.board.grid[row][col] != "_"){
+				var square = document.getElementById(row+","+col);
+				square.firstChild.nodeValue = this.board.grid[row][col];
+				square.disabled = true;
+
+			}
 		}
 	}
 }
