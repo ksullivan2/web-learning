@@ -11,7 +11,7 @@ function minimax(board, count){
 			return 10 - count;
 		}
 		else{
-			return - 10 + count;
+			return count - 10;
 		}
 	}
 	
@@ -23,9 +23,9 @@ function minimax(board, count){
 	//create an array of possible next moves
 	var possibleStates = createPossibleStates(board);
 
-	//we'll store max and mins here
-	var max = 0;
-	var min = 0;
+	//we'll store max and mins here. initialize with the lowest possible scores
+	var max = -10;
+	var min = 10;
 
 	var maxBoard = null;
 	var minBoard = null;
