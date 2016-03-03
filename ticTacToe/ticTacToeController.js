@@ -32,11 +32,15 @@ io.on('connection', function(socket){
   console.log('a user connected');
   socket.on('square press', function(data){
   	//update model
-  	//console.log("received square press", data)
+  	console.log("received square press", data)
   	controller.board.updateModelSquare(data.id, data.playerToken);
   	socket.emit('update view', {grid: controller.board.grid});
+  });
 
-  })
+  socket.on("new game", function(){
+  	controller.board = new BoardModel();
+  	socket.emit('reset view');
+  });
 });
 
 

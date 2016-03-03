@@ -7,6 +7,9 @@ var socket = io.connect();
 socket.on('update view', function(data){
 	updateViewFromModel(data);
 })
+socket.on('reset view', function(){
+	resetView();
+})
 
 function Square(){
 	var square = document.createElement("BUTTON");
@@ -48,7 +51,7 @@ function drawNewGameButton(newGameClickHandler){
 	var newGameButton = document.createElement("BUTTON");
 	newGameButton.className = "newGame";
 	newGameButton.id = "newGameButton";
-	newGameButton.addEventListener("click", newGameClickHandler, false);
+	newGameButton.onclick = function(){socket.emit("new game")};
 
 	//create text node
 	var newGameText = document.createTextNode("New Game");
