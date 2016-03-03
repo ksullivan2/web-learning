@@ -1,17 +1,52 @@
+//THIS IS THE SERVER SIDE FILE THAT WILL RUN
+
+"use strict";
+
+var express = require('express');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+app.use(express.static("public"));
+
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
+
+
+
+var AI = require("./ticTacToeAI.js");
+var BoardModel = require("./ticTacToeModel.js");
+
+
+
+
+
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('square press', function(data){
+  	//update model
+  	//console.log("received square press", data)
+  	controller.board.updateModelSquare(data.id, data.playerToken);
+  	socket.emit('update view', {grid: controller.board.grid});
+
+  })
+});
+
+
+
 //CONTROLLER
 "use strict";
 
-module.exports = Controller;
 
 function Controller(){};
-//var socket = io();
 
-/*io.on('connection', function(socket){
-	socket.on('square press', function(id){
-		//button click handler
-	})
-
-});*/
 
 Controller.prototype.buttonClickHandler = function(event){
 	var pressedSquare = event.target
@@ -92,4 +127,11 @@ Controller.prototype.updateViewFromModel = function(){
 	}
 }
 
+
+
+
+var controller = new Controller();
+
+//create model instance
+controller.board = new BoardModel();
 

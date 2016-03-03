@@ -2,10 +2,18 @@
 "use strict";
 
 
+var socket = io.connect();
+
+socket.on('update view', function(data){
+	updateViewFromModel(data);
+})
+
 function Square(){
 	var square = document.createElement("BUTTON");
 	square.setAttribute("class","square");
-	//square.onclick = io.emit("square press", square.id)
+	square.onclick = function(){
+		console.log("click",this.id);
+		socket.emit("square press", {id:this.id, playerToken: "X"})};
 
 	var squareContent = document.createTextNode("");
 	square.appendChild(squareContent);
@@ -82,5 +90,17 @@ function resetView(){
 	}
 }
 
+function updateViewFromModel(data){
+	for (var row = 0; row < data.grid.length; row++){
+		for(var col = 0; col < data.grid[row].length; col++){
+			if (data.grid[row][col] != "_"){
+				var square = document.getElementById("s"+row+col);
+				square.firstChild.nodeValue = data.grid[row][col];
+				square.disabled = true;
+
+			}
+		}
+	}
+}
 //list all functions so the exported module object has access to them
 //module.exports = {Square, drawBoard, drawNewGameButton, updateViewSquare, disableAllSquares, resetView}

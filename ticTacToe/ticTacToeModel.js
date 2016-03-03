@@ -20,10 +20,10 @@ function BoardModel(){
 	}
 }
 
-BoardModel.prototype.updateModelSquare = function(pressedSquare, playerToken){
+BoardModel.prototype.updateModelSquare = function(id, playerToken){
 	//update model
-	var row = pressedSquare.id[1];
-	var col = pressedSquare.id[2];
+	var row = id[1];
+	var col = id[2];
 	this.grid[row][col] = playerToken;
 }
 

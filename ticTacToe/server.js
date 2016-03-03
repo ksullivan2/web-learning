@@ -30,7 +30,6 @@ io.on('connection', function(socket){
 var AI = require("./ticTacToeAI.js");
 var BoardModel = require("./ticTacToeModel.js");
 var Controller = require("./ticTacToeController.js");
-var io = require('socket.io')
 
 
 function runner(){
