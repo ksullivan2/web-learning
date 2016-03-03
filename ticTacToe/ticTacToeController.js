@@ -4,7 +4,14 @@
 module.exports = Controller;
 
 function Controller(){};
+//var socket = io();
 
+/*io.on('connection', function(socket){
+	socket.on('square press', function(id){
+		//button click handler
+	})
+
+});*/
 
 Controller.prototype.buttonClickHandler = function(event){
 	var pressedSquare = event.target

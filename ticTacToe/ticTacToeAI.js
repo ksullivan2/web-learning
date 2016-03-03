@@ -65,11 +65,8 @@ function minimax(board, count){
 		else{
 			return minBoard;
 		}
-	}
-		
-		
+	}	
 }
-
 
 
 function createPossibleStates(board){
