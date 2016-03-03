@@ -10,6 +10,9 @@ socket.on('update view', function(data){
 socket.on('reset view', function(){
 	resetView();
 })
+socket.on('room full', function(){
+	alert("ROOM IS FULL.");
+})
 
 function Square(){
 	var square = document.createElement("BUTTON");

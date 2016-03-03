@@ -7,6 +7,7 @@ function BoardModel(){
 	//set game properties
 	this.xTurn = true;
 	this.winner = null;
+	this.players = [];
 
 	//create grid
 	this.grid = [];
@@ -19,6 +20,23 @@ function BoardModel(){
 		}
 	}
 }
+
+BoardModel.prototype.addPlayer = function(socket){
+	console.log('added player', this.players.length)
+	if (this.players.length > 1){
+		return false;
+	}
+
+	var playerToken = function(){
+		if (this.players.length === 0){
+			return "X";
+		}
+		return "O";
+	}
+	this.players.push({socket, playerToken});
+	return true;
+}
+
 
 BoardModel.prototype.updateModelSquare = function(id, playerToken){
 	//update model

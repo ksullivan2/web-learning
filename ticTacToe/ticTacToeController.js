@@ -30,6 +30,10 @@ var BoardModel = require("./ticTacToeModel.js");
 
 io.on('connection', function(socket){
   console.log('a user connected');
+  var roomNotFull = controller.board.addPlayer(socket);
+  if (!roomNotFull){socket.emit("room full")};
+
+
   socket.on('square press', function(data){
   	//update model
   	console.log("received square press", data)
