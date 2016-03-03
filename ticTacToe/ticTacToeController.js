@@ -1,7 +1,9 @@
 //CONTROLLER
 "use strict";
 
-function Controller(){}	
+module.exports = Controller;
+
+function Controller(){};
 
 
 Controller.prototype.buttonClickHandler = function(event){

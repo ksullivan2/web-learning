@@ -1,3 +1,5 @@
+"use strict";
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -13,3 +15,25 @@ http.listen(3000, function(){
 io.on('connection', function(socket){
   console.log('a user connected');
 });
+
+
+
+
+
+var AI = require("./ticTacToeAI.js");
+var BoardModel = require("./ticTacToeModel.js");
+var Controller = require("./ticTacToeController.js");
+
+
+function runner(){
+	//create controller object
+	var controller = new Controller();
+
+	//create model instance
+	controller.board = new BoardModel();
+}
+
+
+runner()
+
+ 

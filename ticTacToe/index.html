@@ -3,8 +3,6 @@
 <html>
 <link type="text/css" rel="stylesheet" href="stylesheet.css"/>
 
-<script src="/socket.io/socket.io.js"></script>
-
 
 
 <body>
@@ -21,35 +19,13 @@
 
 
 
-<script type="text/javascript" src="ticTacToeAI.js"></script>
-<script type="text/javascript" src="ticTacToeModel.js"></script>
-<script type="text/javascript" src="ticTacToeView.js"></script>
-<script type="text/javascript" src="ticTacToeController.js"></script>
 
-<script type="text/javascript">
-
-"use strict";
-
-
-
-
-
-function runner(){
-	//create controller object
-	var controller = new Controller();
-	controller.board = new BoardModel();
-	
-	//create view
+<script src="/socket.io/socket.io.js"></script>
+<script src="./ticTacToeView.js"></script>
+<script>
 	drawBoard(controller.buttonClickHandler.bind(controller));
-	drawNewGameButton(controller.newGameClickHandler.bind(controller));
-
-	
-	
-}
-
-runner()
-
-
-</script> </body> 
+	drawNewGameButton(controller.newGameClickHandler.bind(controller));	
+</script>
+</body> 
 
 </html>

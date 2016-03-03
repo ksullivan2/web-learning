@@ -1,6 +1,7 @@
 "use strict";
 
 
+
 function minimax(board, count){
 	//count will keep track of how many levels deep we are in the recursion
 	//always initialize count with -1
@@ -109,3 +110,5 @@ function copyBoard(sourceBoard){
 	newBoard.xTurn = sourceBoard.xTurn;
 	return newBoard;
 }
+
+module.exports = {minimax, copyBoard}

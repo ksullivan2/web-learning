@@ -1,6 +1,7 @@
 //VIEW
 "use strict";
 
+
 function Square(buttonClickHandler){
 	var square = document.createElement("BUTTON");
 	square.setAttribute("class","square");
@@ -14,9 +15,6 @@ function Square(buttonClickHandler){
 
 
 function drawBoard(buttonClickHandler){
-	
-
-	
 	for (var row = 0; row < 3; row ++){
 		//create a Div for that row
 		var tempDiv = document.createElement("DIV");
@@ -83,3 +81,6 @@ function resetView(){
 		squares[i].firstChild.nodeValue = "";
 	}
 }
+
+//list all functions so the exported module object has access to them
+module.exports = {Square, drawBoard, drawNewGameButton, updateViewSquare, disableAllSquares, resetView}

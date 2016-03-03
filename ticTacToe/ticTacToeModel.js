@@ -1,6 +1,7 @@
 //MODEL
 "use strict";
 
+module.exports = BoardModel;
 
 function BoardModel(){
 	//set game properties
@@ -44,14 +45,13 @@ BoardModel.prototype.checkForDraw = function(){
 }
 
 BoardModel.prototype.checkRows = function(){
-	var self = this;
 
 	for (var row = 0; row < 3; row ++){
 		var testArray = [];
 		for (var col = 0; col < 3; col ++){
 			testArray.push(this.grid[row][col]);
 			}
-		if (allInArrayEqual(testArray)){
+		if (this.allInArrayEqual(testArray)){
 			this.winner = testArray[0];
 			return true;
 		}
@@ -68,7 +68,7 @@ BoardModel.prototype.checkCols = function(){
 		for (var row = 0; row < 3; row ++){
 			testArray.push(this.grid[row][col]);
 			}
-		if (allInArrayEqual(testArray)){
+		if (this.allInArrayEqual(testArray)){
 			this.winner = testArray[0];
 			return true;
 		}
@@ -80,11 +80,11 @@ BoardModel.prototype.checkDiagonals = function(){
 	var leftDiagonal = [this.grid[0][0],this.grid[1][1],this.grid[2][2]];
 	var rightDiagonal = [this.grid[0][2],this.grid[1][1],this.grid[2][0]];
 	
-	if (allInArrayEqual(leftDiagonal)){
+	if (this.allInArrayEqual(leftDiagonal)){
 		this.winner = leftDiagonal[0];
 		return true;
 	}
-	else if (allInArrayEqual(rightDiagonal)){
+	else if (this.allInArrayEqual(rightDiagonal)){
 		this.winner = rightDiagonal[0];
 		return true;
 	};
@@ -94,7 +94,7 @@ BoardModel.prototype.checkDiagonals = function(){
 
 //helper functions for model
 
-function allInArrayEqual(array){
+BoardModel.prototype.allInArrayEqual = function(array){
 	for (var i = 0; i < array.length; i ++){
 		if (array[i] === "_" || array[i] !== array[0]){
 			return false;
