@@ -13,6 +13,23 @@ socket.on('reset view', function(){
 socket.on('room full', function(){
 	alert("ROOM IS FULL.");
 })
+socket.on('game over',function(data){
+	disableAllSquares()
+	document.getElementById("gameOverText").style.display = "block";
+
+	if (data.winner === "draw"){
+		tieGame();
+	}
+	else if (data.winner){
+		winGame();
+	}
+	else{
+		loseGame();
+	}
+	
+});
+
+
 
 function Square(){
 	var square = document.createElement("BUTTON");
@@ -111,5 +128,24 @@ function updateViewFromModel(data){
 		}
 	}
 }
-//list all functions so the exported module object has access to them
-//module.exports = {Square, drawBoard, drawNewGameButton, updateViewSquare, disableAllSquares, resetView}
+
+
+
+
+function winGame(){
+	document.getElementById("gameOverText").innerHTML = "You WON!";
+	document.getElementById("messageDIV").style.color = "green";
+
+}
+	
+function loseGame(){
+	document.getElementById("gameOverText").innerHTML = "You LOST!";
+	document.getElementById("messageDIV").style.color = "red";
+}	
+
+function drawGame(){
+	document.getElementById("gameOverText").innerHTML = "You tied.";
+	document.getElementById("messageDIV").style.color = "orange";
+}
+	
+

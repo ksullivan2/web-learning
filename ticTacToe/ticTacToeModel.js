@@ -51,6 +51,15 @@ BoardModel.prototype.findPlayerTokenBasedOnSocket = function(socket){
 	}
 }
 
+BoardModel.prototype.findPlayerSocketBasedOnToken = function(playerToken){
+	//find the player's token based on the socket
+	for (var i = 0; i < this.players.length; i++){
+		if (this.players[i].playerToken === playerToken){
+			return this.players[i].socket;
+		}
+	}
+}
+
 
 BoardModel.prototype.updateModelSquare = function(data, socket){
 	var row = data.id[1];
@@ -66,7 +75,6 @@ BoardModel.prototype.updateModelSquare = function(data, socket){
 	//if the square was blank and it's their turn, make the move
 	if (this.grid[row][col] == "_" && isItPlayersTurn){
 		this.grid[row][col] = playerToken;
-		this.xTurn = !this.xTurn;
 		return true;
 	} 
 	return false;

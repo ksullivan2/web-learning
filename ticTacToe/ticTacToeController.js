@@ -50,7 +50,6 @@ io.on('connection', function(socket){
   	};
   });
 
-
   socket.on('square press', function(data){
   	//update model
 
@@ -61,12 +60,31 @@ io.on('connection', function(socket){
   		io.sockets.emit('update view', {grid: controller.board.grid});
 
   	}
+
+	//check if the game has been won
+	if (controller.board.checkForWin() || controller.board.checkForDraw()){
+
+		if (socket === controller.board.findPlayerSocketBasedOnToken(controller.board.winner)){
+			socket.emit("game over", {winner: true});
+			socket.broadcast.emit("game over", {winner: false});
+		}
+		else{
+			io.sockets.emit("game over", {winner: "draw"})
+		}
+	}
+
+	else{
+		//swap whose turn it is
+		controller.board.xTurn = !controller.board.xTurn;
+	}
+
   });
 
   socket.on("new game", function(){
   	controller.board = new BoardModel();
   	socket.emit('reset view');
   });
+
 });
 
 
@@ -78,59 +96,6 @@ io.on('connection', function(socket){
 function Controller(){};
 
 
-Controller.prototype.buttonClickHandler = function(event){
-	var pressedSquare = event.target
-
-	//check whose turn it was
-	if (this.board.xTurn){
-		var playerToken = "X";	
-	}
-	else {
-		var playerToken = "O";	
-	}
-	
-	//update both model and view
-	updateViewSquare(pressedSquare, playerToken);
-	this.board.updateModelSquare(pressedSquare, playerToken);
-	
-
-	//check if the game has been won
-	if (this.board.checkForWin() || this.board.checkForDraw()){
-		this.winGame();	
-	}
-
-	else{
-		//swap whose turn it is
-		this.board.xTurn = !this.board.xTurn;
-		this.computerMove();
-	}
-	
-}
-
-Controller.prototype.newGameClickHandler = function(event){
-	//update both model and view
-	resetView();
-	this.board = new BoardModel()
-
-	//reset view
-	document.getElementById("drawText").style.display = "none";
-	document.getElementById("loseText").style.display = "none";
-
-
-}
-
-Controller.prototype.winGame = function(){
-	disableAllSquares()
-	if (this.board.winner){
-		document.getElementById("loseText").style.display = "block";
-	}
-	else{
-		document.getElementById("drawText").style.display = "block";
-	}
-	
-}
-
-
 Controller.prototype.computerMove = function(){
 	//updates the model to the computer's next best possible move
 	this.board = minimax(this.board, -1);
@@ -139,7 +104,7 @@ Controller.prototype.computerMove = function(){
 	//check if the game has been won
 	if (this.board.checkForWin()){
 		console.log("computer check for win")
-		this.winGame();	
+		this.winGame()	
 	}
 }
 

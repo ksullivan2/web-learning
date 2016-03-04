@@ -48,10 +48,8 @@ div{
 /*messages show up when game is over*/
 #messageDIV{
 	font-family: Impact;
-	color:red;
 	font-size: 40px;
 	text-align: center;
-	
 	
 	width: 300px;
 	transform: rotate(-30deg);
@@ -61,13 +59,10 @@ div{
 	left: 20%
 }
 
-#loseText{
+#gameOverText{
 	display: none;
 }
 
-#drawText{
-	display: none;
-}
 
 
 /*draw lines by giving squares borders...*/
