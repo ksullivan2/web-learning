@@ -58,7 +58,7 @@ io.on('connection', function(socket){
 
   	//update the view from the model
   	if (validMove){
-  		socket.emit('update view', {grid: controller.board.grid});
+  		io.sockets.emit('update view', {grid: controller.board.grid});
 
   	}
   });
