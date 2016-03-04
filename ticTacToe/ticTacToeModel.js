@@ -4,17 +4,22 @@
 module.exports = BoardModel;
 
 function BoardModel(){
-	//set game properties
-	this.xTurn = true;
-	this.winner = null;
+	//hard-coding 3x3 for now, I know, I know...
+	this.grid = [[],[],[]];
 	this.players = [];
+	this.xTurn = true;
 
-	//create grid
-	this.grid = [];
+	this.newGame()
+}
+
+BoardModel.prototype.newGame = function(){
+	this.winner = null;
+	//specifically NOT resetting xTurn so the losing player goes first next game.
+	
+
+	//create empty grid
 	for (var row = 0; row < 3; row ++){
-		this.grid[row] = [];
 		for (var col = 0; col < 3; col ++){
-			
 			//add blank data to grid
 			this.grid[row][col] = "_"
 		}

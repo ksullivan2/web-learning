@@ -78,8 +78,8 @@ io.on('connection', function(socket){
   });
 
   socket.on("new game", function(){
-  	controller.board = new BoardModel();
-  	socket.emit('reset view');
+  	controller.board.newGame();
+  	io.sockets.emit('reset view');
   });
 
 });
