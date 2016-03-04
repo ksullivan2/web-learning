@@ -22,27 +22,54 @@ function BoardModel(){
 }
 
 BoardModel.prototype.addPlayer = function(socket){
-	console.log('added player', this.players.length)
 	if (this.players.length > 1){
 		return false;
 	}
 
-	var playerToken = function(){
-		if (this.players.length === 0){
-			return "X";
-		}
-		return "O";
+	 
+	if (this.players.length === 0){
+		var playerToken = "X";
 	}
+	else{ 
+		var playerToken = "O";
+	};
+	
+	
+
+
 	this.players.push({socket, playerToken});
 	return true;
 }
 
 
-BoardModel.prototype.updateModelSquare = function(id, playerToken){
-	//update model
-	var row = id[1];
-	var col = id[2];
-	this.grid[row][col] = playerToken;
+BoardModel.prototype.findPlayerTokenBasedOnSocket = function(socket){
+	//find the player's token based on the socket
+	for (var i = 0; i < this.players.length; i++){
+		if (this.players[i].socket === socket){
+			return this.players[i].playerToken;
+		}
+	}
+}
+
+
+BoardModel.prototype.updateModelSquare = function(data, socket){
+	var row = data.id[1];
+	var col = data.id[2];
+
+	var playerToken = this.findPlayerTokenBasedOnSocket(socket);
+
+	console.log(playerToken)
+
+	//check if it's that player's turn
+	var isItPlayersTurn = (this.xTurn && playerToken == "X") || (!this.xTurn && playerToken == "O");
+
+	//if the square was blank and it's their turn, make the move
+	if (this.grid[row][col] == "_" && isItPlayersTurn){
+		this.grid[row][col] = playerToken;
+		this.xTurn = !this.xTurn;
+		return true;
+	} 
+	return false;
 }
 
 BoardModel.prototype.checkForWin = function(){

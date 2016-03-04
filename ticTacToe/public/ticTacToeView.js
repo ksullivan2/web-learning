@@ -19,7 +19,10 @@ function Square(){
 	square.setAttribute("class","square");
 	square.onclick = function(){
 		console.log("click",this.id);
-		socket.emit("square press", {id:this.id, playerToken: "X"})};
+
+		//can't pass socket here, it causes a stack overflow error
+		socket.emit("square press", {id:this.id});
+	};
 
 	var squareContent = document.createTextNode("");
 	square.appendChild(squareContent);

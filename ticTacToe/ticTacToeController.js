@@ -30,15 +30,37 @@ var BoardModel = require("./ticTacToeModel.js");
 
 io.on('connection', function(socket){
   console.log('a user connected');
+
+  //update the view when the person first enters the "room"
+  socket.emit('update view', {grid: controller.board.grid});
+
+  //add them to the game if there's room, else tell them room is full
   var roomNotFull = controller.board.addPlayer(socket);
-  if (!roomNotFull){socket.emit("room full")};
+  	if (!roomNotFull){socket.emit("room full")};
+
+  socket.on('disconnect', function(socket){
+  	console.log("user disconnect")
+
+  	//this doesn't work because once the user connects, i lose the socket information.
+  	for (var i =0; i< controller.board.players.length; i++){
+  		if (controller.board.players[i].socket === socket){
+  			controller.board.players.slice(i,1);
+  			console.log("removed player", controller.board.players)
+  		};
+  	};
+  });
 
 
   socket.on('square press', function(data){
   	//update model
-  	console.log("received square press", data)
-  	controller.board.updateModelSquare(data.id, data.playerToken);
-  	socket.emit('update view', {grid: controller.board.grid});
+
+  	var validMove = controller.board.updateModelSquare(data, socket);
+
+  	//update the view from the model
+  	if (validMove){
+  		socket.emit('update view', {grid: controller.board.grid});
+
+  	}
   });
 
   socket.on("new game", function(){
