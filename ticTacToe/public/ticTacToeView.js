@@ -114,6 +114,8 @@ function resetView(){
 		squares[i].disabled = false;
 		squares[i].firstChild.nodeValue = "";
 	}
+
+	document.getElementById("gameOverText").style.display = "none";
 }
 
 function updateViewFromModel(data){
