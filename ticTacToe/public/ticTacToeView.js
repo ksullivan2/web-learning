@@ -16,6 +16,7 @@ socket.on('room full', function(){
 socket.on('game over',function(data){
 	disableAllSquares()
 	document.getElementById("gameOverText").style.display = "block";
+	document.getElementById("newGameButton").style.display = "block";
 
 	if (data.winner === "draw"){
 		tieGame();
@@ -116,6 +117,7 @@ function resetView(){
 	}
 
 	document.getElementById("gameOverText").style.display = "none";
+	document.getElementById("newGameButton").style.display = "none";
 }
 
 function updateViewFromModel(data){

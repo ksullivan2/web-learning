@@ -43,6 +43,7 @@ div{
 	margin-left: 33%;
 	border-radius: 10px;
 	border: 1px dashed black;
+	display: none;
 }
 
 /*messages show up when game is over*/
