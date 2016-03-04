@@ -80,6 +80,10 @@ BoardModel.prototype.updateModelSquare = function(data, socket){
 	return false;
 }
 
+BoardModel.prototype.swapTurn = function(){
+	this.xTurn = !this.xTurn;
+}
+
 BoardModel.prototype.checkForWin = function(){
 	return (this.checkRows() || this.checkCols() || this.checkDiagonals());
 }

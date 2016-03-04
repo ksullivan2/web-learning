@@ -58,6 +58,7 @@ io.on('connection', function(socket){
   	//update the view from the model
   	if (validMove){
   		io.sockets.emit('update view', {grid: controller.board.grid});
+  		controller.board.swapTurn();
 
   	}
 
@@ -73,10 +74,6 @@ io.on('connection', function(socket){
 		}
 	}
 
-	else{
-		//swap whose turn it is
-		controller.board.xTurn = !controller.board.xTurn;
-	}
 
   });
 
