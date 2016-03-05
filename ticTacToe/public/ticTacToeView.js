@@ -27,10 +27,11 @@ socket.on('game over',function(data){
 	document.getElementById("gameOverText").style.display = "block";
 	document.getElementById("newGameButton").style.display = "block";
 
+	console.log(data.winner)
 	if (data.winner === "draw"){
-		tieGame();
+		drawGame();
 	}
-	else if (data.winner){
+	else if (data.winner === "you"){
 		winGame();
 	}
 	else{

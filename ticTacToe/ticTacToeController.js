@@ -27,7 +27,6 @@ var BoardModel = require("./ticTacToeModel.js");
 
 
 
-
 io.on('connection', function(socket){
   console.log('a user connected');
 
@@ -39,6 +38,8 @@ io.on('connection', function(socket){
   	if (!roomNotFull){socket.emit("room full")}
   	//if 2 players are in the room, start the game
   	else if (controller.board.players.length ==2){
+  		//this will clear any messages and enable the buttons
+  		io.sockets.emit('reset view');
   		//tell the first person to enter the room that it's their turn
   		socket.broadcast.emit('your turn');
   		//tell the last person to enter the room to wait for a move
@@ -58,6 +59,11 @@ io.on('connection', function(socket){
   	};
   });
 
+  socket.on("new game", function(){
+  	controller.board.newGame();
+  	io.sockets.emit('reset view');
+  });
+
   socket.on('square press', function(data){
   	//update model
 
@@ -72,24 +78,20 @@ io.on('connection', function(socket){
   	}
 
 	//check if the game has been won
-	if (controller.board.checkForWin() || controller.board.checkForDraw()){
-
+	if (controller.board.checkForWin()){
 		if (socket === controller.board.findPlayerSocketBasedOnToken(controller.board.winner)){
-			socket.emit("game over", {winner: true});
-			socket.broadcast.emit("game over", {winner: false});
-		}
-		else{
-			io.sockets.emit("game over", {winner: "draw"})
+			socket.emit("game over", {winner: "you"});
+			socket.broadcast.emit("game over", {winner: "notYou"});
 		}
 	}
+	else if(controller.board.checkForDraw()){
+			io.sockets.emit("game over", {winner: "draw"})
+	};
 
 
   });
 
-  socket.on("new game", function(){
-  	controller.board.newGame();
-  	io.sockets.emit('reset view');
-  });
+  
 
 });
 
