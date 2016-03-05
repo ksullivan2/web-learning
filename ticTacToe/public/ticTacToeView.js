@@ -14,7 +14,7 @@ socket.on('room full', function(){
 	alert("ROOM IS FULL.");
 })
 
-socket.on('turn over',function(){
+socket.on('wait for move',function(){
 	document.getElementById("waiting").style.display = "block";
 	document.getElementById("waiting").innerHTML = "waiting for opponent's move...";
 })
@@ -23,7 +23,8 @@ socket.on('your turn',function(){
 })
 
 socket.on('game over',function(data){
-	disableAllSquares()
+	disableAllSquares();
+	document.getElementById("waiting").style.display= "none";
 	document.getElementById("gameOverText").style.display = "block";
 	document.getElementById("newGameButton").style.display = "block";
 

@@ -43,7 +43,7 @@ io.on('connection', function(socket){
   		//tell the first person to enter the room that it's their turn
   		socket.broadcast.emit('your turn');
   		//tell the last person to enter the room to wait for a move
-  		socket.emit('turn over');
+  		socket.emit('wait for move');
   	};
 
 
@@ -62,6 +62,16 @@ io.on('connection', function(socket){
   socket.on("new game", function(){
   	controller.board.newGame();
   	io.sockets.emit('reset view');
+
+  	if (controller.board.isItPlayersTurn(socket)){
+  		socket.emit('your turn');
+  		socket.broadcast.emit('wait for move');
+  	}
+  	else {
+  		socket.emit('wait for move');
+  		socket.broadcast.emit('your turn');
+  	};
+ 
   });
 
   socket.on('square press', function(data){
@@ -73,7 +83,7 @@ io.on('connection', function(socket){
   	if (validMove){
   		io.sockets.emit('update view', {grid: controller.board.grid});
   		controller.board.swapTurn();
-  		socket.emit('turn over');
+  		socket.emit('wait for move');
   		socket.broadcast.emit('your turn');
   	}
 

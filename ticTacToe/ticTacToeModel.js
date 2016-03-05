@@ -63,17 +63,20 @@ BoardModel.prototype.findPlayerSocketBasedOnToken = function(playerToken){
 	}
 }
 
+BoardModel.prototype.isItPlayersTurn = function(socket){
+	var playerToken = this.findPlayerTokenBasedOnSocket(socket);
+
+	//check if it's that player's turn, return boolean
+	return (this.xTurn && playerToken == "X") || (!this.xTurn && playerToken == "O");
+}
+
 
 BoardModel.prototype.updateModelSquare = function(data, socket){
 	var row = data.id[1];
 	var col = data.id[2];
 
+	var isItPlayersTurn = this.isItPlayersTurn(socket);
 	var playerToken = this.findPlayerTokenBasedOnSocket(socket);
-
-	console.log(playerToken)
-
-	//check if it's that player's turn
-	var isItPlayersTurn = (this.xTurn && playerToken == "X") || (!this.xTurn && playerToken == "O");
 
 	//if the square was blank and it's their turn, make the move
 	if (this.grid[row][col] == "_" && isItPlayersTurn){
