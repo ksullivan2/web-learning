@@ -13,6 +13,7 @@ socket.on('reset view', function(){
 socket.on('room full', function(){
 	alert("ROOM IS FULL.");
 })
+
 socket.on('turn over',function(){
 	document.getElementById("waiting").style.display = "block";
 	document.getElementById("waiting").innerHTML = "waiting for opponent's move...";
@@ -44,12 +45,9 @@ function Square(){
 	var square = document.createElement("BUTTON");
 	square.setAttribute("class","square");
 	square.onclick = function(){
-		console.log("click",this.id);
-
-		//can't pass socket here, it causes a stack overflow error
 		socket.emit("square press", {id:this.id});
 	};
-
+	square.disabled = true;
 	var squareContent = document.createTextNode("");
 	square.appendChild(squareContent);
 

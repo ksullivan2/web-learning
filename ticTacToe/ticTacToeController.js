@@ -36,7 +36,15 @@ io.on('connection', function(socket){
 
   //add them to the game if there's room, else tell them room is full
   var roomNotFull = controller.board.addPlayer(socket);
-  	if (!roomNotFull){socket.emit("room full")};
+  	if (!roomNotFull){socket.emit("room full")}
+  	//if 2 players are in the room, start the game
+  	else if (controller.board.players.length ==2){
+  		//tell the first person to enter the room that it's their turn
+  		socket.broadcast.emit('your turn');
+  		//tell the last person to enter the room to wait for a move
+  		socket.emit('turn over');
+  	};
+
 
   socket.on('disconnect', function(socket){
   	console.log("user disconnect")

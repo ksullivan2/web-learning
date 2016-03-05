@@ -31,16 +31,14 @@ BoardModel.prototype.addPlayer = function(socket){
 		return false;
 	}
 
-	 
 	if (this.players.length === 0){
 		var playerToken = "X";
 	}
 	else{ 
 		var playerToken = "O";
+
 	};
 	
-	
-
 
 	this.players.push({socket, playerToken});
 	return true;
