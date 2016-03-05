@@ -13,6 +13,14 @@ socket.on('reset view', function(){
 socket.on('room full', function(){
 	alert("ROOM IS FULL.");
 })
+socket.on('turn over',function(){
+	document.getElementById("waiting").style.display = "block";
+	document.getElementById("waiting").innerHTML = "waiting for opponent's move...";
+})
+socket.on('your turn',function(){
+	document.getElementById("waiting").style.display = "none";
+})
+
 socket.on('game over',function(data){
 	disableAllSquares()
 	document.getElementById("gameOverText").style.display = "block";
@@ -67,10 +75,6 @@ function drawBoard(){
 
 
 function drawNewGameButton(newGameClickHandler){
-	//create new div
-	var newDiv = document.createElement("DIV");
-	
-	
 	//create button
 	var newGameButton = document.createElement("BUTTON");
 	newGameButton.className = "newGame";
@@ -83,8 +87,7 @@ function drawNewGameButton(newGameClickHandler){
 
 	
 	//put 'em all on screen
-	document.getElementById("boardDIV").appendChild(newDiv);
-	newDiv.appendChild(newGameButton);
+	document.getElementById("underBoardDIV").appendChild(newGameButton);
 	newGameButton.appendChild(newGameText);
 }
 
@@ -138,18 +141,17 @@ function updateViewFromModel(data){
 
 function winGame(){
 	document.getElementById("gameOverText").innerHTML = "You WON!";
-	document.getElementById("messageDIV").style.color = "green";
-
+	document.getElementById("gameOverDIV").style.color = "green";
 }
 	
 function loseGame(){
 	document.getElementById("gameOverText").innerHTML = "You LOST!";
-	document.getElementById("messageDIV").style.color = "red";
+	document.getElementById("gameOverDIV").style.color = "red";
 }	
 
 function drawGame(){
 	document.getElementById("gameOverText").innerHTML = "You tied.";
-	document.getElementById("messageDIV").style.color = "orange";
+	document.getElementById("gameOverDIV").style.color = "orange";
 }
 	
 

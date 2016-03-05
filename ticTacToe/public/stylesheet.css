@@ -7,7 +7,7 @@ h1{
 #mainDIV{
 	position: relative;
 	width: 500px;
-	height: 500px;
+	height: 350px;
 }
 
 #boardDIV{
@@ -47,7 +47,7 @@ div{
 }
 
 /*messages show up when game is over*/
-#messageDIV{
+#gameOverDIV{
 	font-family: Impact;
 	font-size: 40px;
 	text-align: center;
@@ -61,6 +61,14 @@ div{
 }
 
 #gameOverText{
+	display: none;
+}
+
+#waiting{
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	color: gray;
+	margin-left: 15%;
 	display: none;
 }
 

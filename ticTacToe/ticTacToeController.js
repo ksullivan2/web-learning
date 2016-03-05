@@ -59,7 +59,8 @@ io.on('connection', function(socket){
   	if (validMove){
   		io.sockets.emit('update view', {grid: controller.board.grid});
   		controller.board.swapTurn();
-
+  		socket.emit('turn over');
+  		socket.broadcast.emit('your turn');
   	}
 
 	//check if the game has been won
